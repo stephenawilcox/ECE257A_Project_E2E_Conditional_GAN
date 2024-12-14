@@ -6,6 +6,7 @@ import tensorflow as tf
 ''' We should compare with baseline that equalizor of Rayleigh fading'''
 CP = 16
 N = 64
+
 def generator_conditional(z, conditioning):  # Convolution Generator
     with tf.variable_scope("generator", reuse=tf.AUTO_REUSE):
         z_combine = tf.concat([z, conditioning], -1)
@@ -17,6 +18,7 @@ def generator_conditional(z, conditioning):  # Convolution Generator
         conv3_g = tf.nn.leaky_relu(conv3_g)
         conv4_g = tf.layers.conv1d(inputs=conv3_g, filters=2, kernel_size=3, padding='same')
         return conv4_g
+
 def discriminator_condintional(x, conditioning):
     with tf.variable_scope("discriminator", reuse=tf.AUTO_REUSE):
         z_combine = tf.concat([x, conditioning], -1)
@@ -130,7 +132,7 @@ def encoding_padding(encoding):
 
 """ Start of the Main function """
 ''' Building the Graph'''
-batch_size = 512
+batch_size = 320
 block_length = 64
 condition_depth = 4
 Z_dim_c = 16
@@ -202,12 +204,12 @@ accuracy_G = tf.reduce_mean(tf.cast((tf.abs(G_decodings_prob - X) > 0.5), tf.flo
 WER_G = 1 - tf.reduce_mean(tf.cast(tf.reduce_all(tf.abs(G_decodings_prob - X) < 0.5, 1), tf.float32))
 
 init = tf.global_variables_initializer()
-number_steps_receiver = 0
-number_steps_channel = 0
-number_steps_transmitter = 0
-display_step = 100
-batch_size = 1000
-number_iterations = 1000  # in each iteration, the receiver, the transmitter and the channel will be updated
+number_steps_receiver = 5000 #0
+number_steps_channel = 2000 #0
+number_steps_transmitter = 5000 #0
+display_step = 500
+# batch_size = 1000
+number_iterations = 10  # in each iteration, the receiver, the transmitter and the channel will be updated
 
 EbNo_train = 20.
 EbNo_train = 10. ** (EbNo_train / 10.)
@@ -220,12 +222,12 @@ EbNo_test = 10. ** (EbNo_test / 10.)
 
 R = 0.5
 
-N_training = int(5e6)
+N_training = int(1e6)
 data = np.random.binomial(1, 0.5, [N_training, block_length, 1])
 data_size = len(data)
 N_val = int(1e4)
 val_data = np.random.binomial(1, 0.5, [N_val, block_length, 1])
-N_test = int(1e4)
+N_test = int(1e6)
 test_data = np.random.binomial(1, 0.5, [N_test, block_length, 1])
 
 config = tf.ConfigProto()
@@ -245,12 +247,12 @@ with tf.Session(config=config) as sess:
     start_idx = 0
     for iteration in range(number_iterations):
         print("iteration is ", iteration)
-        number_steps_transmitter += 5000
-        number_steps_receiver += 5000
-        number_steps_channel += 2000
+        # number_steps_transmitter += 5000
+        # number_steps_receiver += 5000
+        # number_steps_channel += 2000
         ''' =========== Training the Channel Simulator ======== '''
         for step in range(number_steps_channel):
-            if step % 100 == 0:
+            if step % 500 == 0:
                 print("Training ChannelGAN, step is ", step)
             # batch_x = data[start_idx:start_idx + int(batch_size / 2), :]
             batch_x = generate_batch_data(int(batch_size / 2))
@@ -276,7 +278,7 @@ with tf.Session(config=config) as sess:
 
         ''' =========== Training the Transmitter ==== '''
         for step in range(number_steps_transmitter):
-            if step % 100 == 0:
+            if step % 500 == 0:
                 print("Training transmitter, step is ", step)
 
             # batch_x = data[start_idx:start_idx + batch_size, :]
@@ -290,7 +292,7 @@ with tf.Session(config=config) as sess:
         ''' ========== Training the Receiver ============== '''
 
         for step in range(number_steps_receiver):
-            if step % 100 == 0:
+            if step % 500 == 0:
                 print("Training receiver, step is ", step)
             batch_x = generate_batch_data(batch_size)
             sess.run(Rx_solver, feed_dict={X: batch_x,
@@ -340,7 +342,7 @@ with tf.Session(config=config) as sess:
               "{:.4f}".format(loss) + ", Test Accuracy= " + \
               "{:.3f}".format(acc))
 
-        EbNodB_range = np.arange(0, 30)
+        EbNodB_range = np.arange(10, 25)
         ber = np.ones(len(EbNodB_range))
         wer = np.ones(len(EbNodB_range))
         for n in range(0, len(EbNodB_range)):

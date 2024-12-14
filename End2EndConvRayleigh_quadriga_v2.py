@@ -2,12 +2,36 @@ from __future__ import division
 import numpy as np
 import tensorflow as tf
 # import tensorflow.compat.v1 as tf
-import os
-# tf.disable_v2_behavior()
 
-# os.environ["CUDA_DEVICE_ORDER"] = "1"
-# os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 
+channel_data_path = 'data_channel_quadriga'
+
+cn_real = np.fromfile(f'{channel_data_path}/channel_real_1.bin') # static
+cn_imag = np.fromfile(f'{channel_data_path}/channel_imag_1.bin') # static
+cn_real_test = np.fromfile(f'{channel_data_path}/channel_real_1.bin') # static
+cn_imag_test = np.fromfile(f'{channel_data_path}/channel_imag_1.bin') # static
+
+# cn_real = np.fromfile(f'{channel_data_path}/channel_real_2.bin') # randomwalk
+# cn_imag = np.fromfile(f'{channel_data_path}/channel_imag_2.bin') # randomwalk
+# cn_real_test = np.fromfile(f'{channel_data_path}/channel_real_2_test.bin') # randomwalk
+# cn_imag_test = np.fromfile(f'{channel_data_path}/channel_imag_2_test.bin') # randomwalk
+
+# cn_real = np.fromfile(f'{channel_data_path}/channel_real_out.bin') # outdoor
+# cn_imag = np.fromfile(f'{channel_data_path}/channel_imag_out.bin') # outdoor
+# cn_real_test = np.fromfile(f'{channel_data_path}/channel_real_out_test.bin') # outdoor
+# cn_imag_test = np.fromfile(f'{channel_data_path}/channel_imag_out_test.bin') # outdoor
+
+def min_max_scale(data, range=(-1, 1)):
+    min_val = np.min(data)
+    max_val = np.max(data)
+    scaled = (data - min_val) / (max_val - min_val)
+    scaled = scaled * (range[1] - range[0]) + range[0]
+    return scaled, min_val, max_val
+
+cn_real, _, _ = min_max_scale(cn_real)
+cn_imag, _, _ = min_max_scale(cn_imag)
+cn_real_test, _, _ = min_max_scale(cn_real_test)
+cn_imag_test, _, _ = min_max_scale(cn_imag_test)
 
 def generator_conditional(z, conditioning):  # Convolution Generator
     with tf.variable_scope("generator", reuse=tf.AUTO_REUSE):
@@ -113,16 +137,35 @@ def Rayleigh_noise_layer(input_layer, h_r, h_i, std):
     return tf.concat([tf.real(output_complex_reshape), tf.imag(output_complex_reshape)], -1)
 
 
-def sample_h(sample_size):
-    return np.random.normal(size=sample_size) / np.sqrt(2.)
+def sample_h(sample_size, cn_real, cn_imag):
+    """
+    Sample channel coefficients from loaded data
+    Args:
+        sample_size: batch size (integer)
+        cn_real: real channel data array
+        cn_imag: imaginary channel data array
+    Returns:
+        Tuple of (h_real, h_imag) each with shape (batch_size, 1)
+    """
+    global start_cn_idx
+
+    if start_cn_idx + sample_size >= len(cn_real):
+        start_cn_idx = 0
+
+    h_real = cn_real[start_cn_idx:start_cn_idx + sample_size]
+    h_imag = cn_imag[start_cn_idx:start_cn_idx + sample_size]
+
+    start_cn_idx += sample_size
+
+    return h_real.reshape(-1, 1), h_imag.reshape(-1, 1)
 
 
 """ Start of the Main function """
 
 ''' Building the Graph'''
 batch_size = 320
-block_length = 64
-Z_dim_c = 16
+block_length = 2
+Z_dim_c = 32
 learning_rate = 1e-4
 
 X = tf.placeholder(tf.float32, shape=[None, block_length, 1])
@@ -161,11 +204,26 @@ D_loss_real = tf.reduce_mean(
 D_loss_fake = tf.reduce_mean(
     tf.nn.sigmoid_cross_entropy_with_logits(logits=D_logit_fake, labels=tf.zeros_like(D_logit_fake)))
 D_loss = D_loss_real + D_loss_fake
+
+# LSGAN losses
+# D_loss_real = 0.5 * tf.reduce_mean(tf.square(D_logit_real - 1))
+# D_loss_fake = 0.5 * tf.reduce_mean(tf.square(D_logit_fake))
+# D_loss = D_loss_real + D_loss_fake
+
+G_loss = 0.5 * tf.reduce_mean(tf.square(D_logit_fake - 1))
+# # Add L1 loss weight
+# lambda_l1 = 100.0
+# # Modified generator loss
+# G_loss_gan = tf.reduce_mean(
+#     tf.nn.sigmoid_cross_entropy_with_logits(logits=D_logit_fake, labels=tf.ones_like(D_logit_fake)))
+# G_loss_l1 = tf.reduce_mean(tf.abs(R_sample_uniform - G_sample_uniform))
+# G_loss = G_loss_gan + lambda_l1 * G_loss_l1
+
 G_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=D_logit_fake, labels=tf.ones_like(D_logit_fake)))
 # Set up solvers
 
-D_solver = tf.train.AdamOptimizer(learning_rate=1e-4, beta1=0.5).minimize(D_loss, var_list=Disc_vars)
-G_solver = tf.train.AdamOptimizer(learning_rate=1e-4, beta1=0.5).minimize(G_loss, var_list=Gen_vars)
+D_solver = tf.train.AdamOptimizer(learning_rate=learning_rate, beta1=0.5).minimize(D_loss, var_list=Disc_vars)
+G_solver = tf.train.AdamOptimizer(learning_rate=learning_rate, beta1=0.5).minimize(G_loss, var_list=Gen_vars)
 loss_receiver_R = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(
     logits=R_decodings_logit, labels=X))
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
@@ -179,18 +237,18 @@ accuracy_G = tf.reduce_mean(tf.cast((tf.abs(G_decodings_prob - X) > 0.5), tf.flo
 WER_R = 1 - tf.reduce_mean(tf.cast(tf.reduce_all(tf.abs(R_decodings_prob - X) < 0.5, 1), tf.float32))
 
 init = tf.global_variables_initializer()
-number_steps_receiver = 7500  # 8500
-number_steps_channel = 8500  # 8500
-number_steps_transmitter = 7500  # 8500
-number_iterations = 15  # in each iteration, the receiver, the transmitter and the channel will be updated
+number_steps_receiver = 6000 # 8500
+number_steps_channel = 6500  # 8500
+number_steps_transmitter = 6000  # 8500
+number_iterations = 10  # in each iteration, the receiver, the transmitter and the channel will be updated
 
 EbNo_train = 20.
 EbNo_train = 10. ** (EbNo_train / 10.)
 
-EbNo_train_GAN = 35.
+EbNo_train_GAN = 40.
 EbNo_train_GAN = 10. ** (EbNo_train_GAN / 10.)
 
-EbNo_test = 15.
+EbNo_test = 20.
 EbNo_test = 10. ** (EbNo_test / 10.)
 
 R = 0.5
@@ -210,13 +268,18 @@ N_training = int(1e6)
 data = np.random.binomial(1, 0.5, [N_training, block_length, 1])
 N_val = int(1e4)
 val_data = np.random.binomial(1, 0.5, [N_val, block_length, 1])
-N_test = int(1e5)
+N_test = int(1e4)
 test_data = np.random.binomial(1, 0.5, [N_test, block_length, 1])
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
+
+# start_idx = 0
+# h_r, h_i = sample_h(batch_size, cn_real, cn_imag)
+
 with tf.Session(config=config) as sess:
     sess.run(tf.global_variables_initializer())
     start_idx = 0
+    start_cn_idx = 0
     for iteration in range(number_iterations):
         # number_steps_transmitter += 500 #2000  # 5000
         # number_steps_receiver += 500 #2000  # 5000
@@ -234,16 +297,19 @@ with tf.Session(config=config) as sess:
                                          + np.random.normal(0, 0.1, size=([int(batch_size / 2), block_length, 2])),
                                          random_data), axis=0)
 
+            h_real, h_image = sample_h(batch_size, cn_real, cn_imag)
+            # if step % 2 == 0:  # Train discriminator less frequently
             _, D_loss_curr = sess.run([D_solver, D_loss],
                                       feed_dict={encodings_uniform_generated: input_data,
-                                                 h_i: sample_h([batch_size, 1]),
-                                                 h_r: sample_h([batch_size, 1]),
+                                                 h_i: h_image,
+                                                 h_r: h_real,
                                                  Z: sample_Z([batch_size, block_length, Z_dim_c]),
                                                  Noise_std: (np.sqrt(1 / (2 * R * EbNo_train_GAN)))})
+
             _, G_loss_curr = sess.run([G_solver, G_loss],
                                       feed_dict={encodings_uniform_generated: input_data,
-                                                 h_i: sample_h([batch_size, 1]),
-                                                 h_r: sample_h([batch_size, 1]),
+                                                 h_i: h_image,
+                                                 h_r: h_real,
                                                  Z: sample_Z([batch_size, block_length, Z_dim_c]),
                                                  Noise_std: (np.sqrt(1 / (2 * R * EbNo_train_GAN)))})
 
@@ -252,10 +318,12 @@ with tf.Session(config=config) as sess:
             if step % 500 == 0:
                 print("Training transmitter, step is ", step)
             batch_x = generate_batch_data(batch_size)
+            h_real, h_image = sample_h(batch_size, cn_real, cn_imag)
+
             sess.run(Tx_solver, feed_dict={X: batch_x,
                                            Z: sample_Z([batch_size, block_length, Z_dim_c]),
-                                           h_i: sample_h([batch_size, 1]),
-                                           h_r: sample_h([batch_size, 1]),
+                                           h_i: h_image,
+                                           h_r: h_real,
                                            Noise_std: (np.sqrt(1 / (2 * R * EbNo_train)))
                                            })
 
@@ -264,16 +332,18 @@ with tf.Session(config=config) as sess:
             if step % 500 == 0:
                 print("Training receiver, step is ", step)
             batch_x = generate_batch_data(batch_size)
+            h_real, h_image = sample_h(batch_size, cn_real, cn_imag)
+
             sess.run(Rx_solver, feed_dict={X: batch_x,
-                                           h_i: sample_h([batch_size, 1]),
-                                           h_r: sample_h([batch_size, 1]),
+                                           h_i: h_image,
+                                           h_r: h_real,
                                            Noise_std: (np.sqrt(1 / (2 * R * EbNo_train)))})
 
         '''  ----- Testing ----  '''
         loss, acc = sess.run([loss_receiver_R, accuracy_R],
                              feed_dict={X: batch_x,
-                                        h_i: sample_h([batch_size, 1]),
-                                        h_r: sample_h([batch_size, 1]),
+                                        h_i: h_image,
+                                        h_r: h_real,
                                         Noise_std: np.sqrt(1 / (2 * R * EbNo_train))})
         print("Real Channel Evaluation:", "Step " + str(step) + ", Minibatch Loss= " + \
               "{:.4f}".format(loss) + ", Training Accuracy= " + \
@@ -281,8 +351,8 @@ with tf.Session(config=config) as sess:
 
         loss, acc = sess.run([loss_receiver_G, accuracy_G],
                              feed_dict={X: batch_x,
-                                        h_i: sample_h([batch_size, 1]),
-                                        h_r: sample_h([batch_size, 1]),
+                                        h_i: h_image,
+                                        h_r: h_real,
                                         Z: sample_Z([batch_size, block_length, Z_dim_c]),
                                         Noise_std: np.sqrt(1 / (2 * R * EbNo_train))
                                         })
@@ -299,10 +369,13 @@ with tf.Session(config=config) as sess:
             ber[n], wer[n] = sess.run([accuracy_R, WER_R],
                                       feed_dict={X: test_data,
                                                  Noise_std: (np.sqrt(1 / (2 * R * EbNo))),
-                                                 h_i: sample_h([len(test_data), 1]),
-                                                 h_r: sample_h([len(test_data), 1]),
+                                                 h_i: cn_imag_test.reshape(-1, 1),
+                                                 h_r: cn_real_test.reshape(-1, 1)
+                                                 # h_i: cn_imag.reshape(-1, 1),
+                                                 # h_r: cn_real.reshape(-1, 1)
                                                  })
             print('SNR:', EbNodB_range[n], 'BER:', ber[n], 'WER:', wer[n])
 
         print(ber)
         print(wer)
+

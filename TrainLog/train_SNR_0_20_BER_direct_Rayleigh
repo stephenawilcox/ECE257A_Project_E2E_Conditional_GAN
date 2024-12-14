@@ -1,0 +1,304 @@
+/usr/bin/python3 /tmp/66451d14-b7af-41b7-94fe-77189cb5d785/End2EndConvRayleigh_simple_direct.py
+WARNING:tensorflow:From /tmp/66451d14-b7af-41b7-94fe-77189cb5d785/End2EndConvRayleigh_simple_direct.py:79: The name tf.placeholder is deprecated. Please use tf.compat.v1.placeholder instead.
+
+WARNING:tensorflow:From /tmp/66451d14-b7af-41b7-94fe-77189cb5d785/End2EndConvRayleigh_simple_direct.py:12: The name tf.variable_scope is deprecated. Please use tf.compat.v1.variable_scope instead.
+
+WARNING:tensorflow:From /tmp/66451d14-b7af-41b7-94fe-77189cb5d785/End2EndConvRayleigh_simple_direct.py:12: The name tf.AUTO_REUSE is deprecated. Please use tf.compat.v1.AUTO_REUSE instead.
+
+WARNING:tensorflow:From /tmp/66451d14-b7af-41b7-94fe-77189cb5d785/End2EndConvRayleigh_simple_direct.py:13: conv1d (from tensorflow.python.layers.convolutional) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.keras.layers.Conv1D` instead.
+WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/tensorflow_core/python/layers/convolutional.py:218: Layer.apply (from tensorflow.python.keras.engine.base_layer) is deprecated and will be removed in a future version.
+Instructions for updating:
+Please use `layer.__call__` method instead.
+WARNING:tensorflow:From /tmp/66451d14-b7af-41b7-94fe-77189cb5d785/End2EndConvRayleigh_simple_direct.py:21: calling l2_normalize (from tensorflow.python.ops.nn_impl) with dim is deprecated and will be removed in a future version.
+Instructions for updating:
+dim is deprecated, use axis instead
+WARNING:tensorflow:From /tmp/66451d14-b7af-41b7-94fe-77189cb5d785/End2EndConvRayleigh_simple_direct.py:55: The name tf.random_normal is deprecated. Please use tf.random.normal instead.
+
+WARNING:tensorflow:From /tmp/66451d14-b7af-41b7-94fe-77189cb5d785/End2EndConvRayleigh_simple_direct.py:59: The name tf.real is deprecated. Please use tf.math.real instead.
+
+WARNING:tensorflow:From /tmp/66451d14-b7af-41b7-94fe-77189cb5d785/End2EndConvRayleigh_simple_direct.py:59: The name tf.imag is deprecated. Please use tf.math.imag instead.
+
+WARNING:tensorflow:From /tmp/66451d14-b7af-41b7-94fe-77189cb5d785/End2EndConvRayleigh_simple_direct.py:90: The name tf.trainable_variables is deprecated. Please use tf.compat.v1.trainable_variables instead.
+
+WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/tensorflow_core/python/ops/nn_impl.py:183: where (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+WARNING:tensorflow:From /tmp/66451d14-b7af-41b7-94fe-77189cb5d785/End2EndConvRayleigh_simple_direct.py:98: The name tf.train.AdamOptimizer is deprecated. Please use tf.compat.v1.train.AdamOptimizer instead.
+
+WARNING:tensorflow:From /tmp/66451d14-b7af-41b7-94fe-77189cb5d785/End2EndConvRayleigh_simple_direct.py:122: The name tf.ConfigProto is deprecated. Please use tf.compat.v1.ConfigProto instead.
+
+WARNING:tensorflow:From /tmp/66451d14-b7af-41b7-94fe-77189cb5d785/End2EndConvRayleigh_simple_direct.py:124: The name tf.Session is deprecated. Please use tf.compat.v1.Session instead.
+
+2024-11-06 10:10:00.659080: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2024-11-06 10:10:00.666075: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 3194000000 Hz
+2024-11-06 10:10:00.668075: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x49f5a10 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2024-11-06 10:10:00.668106: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+2024-11-06 10:10:00.669482: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcuda.so.1
+2024-11-06 10:10:00.669520: E tensorflow/stream_executor/cuda/cuda_driver.cc:318] failed call to cuInit: UNKNOWN ERROR (-1)
+2024-11-06 10:10:00.669540: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (e1955d69eb22): /proc/driver/nvidia/version does not exist
+WARNING:tensorflow:From /tmp/66451d14-b7af-41b7-94fe-77189cb5d785/End2EndConvRayleigh_simple_direct.py:125: The name tf.global_variables_initializer is deprecated. Please use tf.compat.v1.global_variables_initializer instead.
+
+iteration is  0
+Training step 0
+Evaluation: Step 0, Minibatch Loss= 0.6933, Training Accuracy= 0.553
+Training step 1000
+Evaluation: Step 1000, Minibatch Loss= 0.0131, Training Accuracy= 0.006
+Training step 2000
+Evaluation: Step 2000, Minibatch Loss= 0.0145, Training Accuracy= 0.000
+Training step 3000
+Evaluation: Step 3000, Minibatch Loss= 0.0263, Training Accuracy= 0.013
+Training step 4000
+Evaluation: Step 4000, Minibatch Loss= 0.0264, Training Accuracy= 0.009
+Training step 5000
+Evaluation: Step 5000, Minibatch Loss= 0.0151, Training Accuracy= 0.009
+Training step 6000
+Evaluation: Step 6000, Minibatch Loss= 0.0175, Training Accuracy= 0.006
+Training step 7000
+Evaluation: Step 7000, Minibatch Loss= 0.0164, Training Accuracy= 0.006
+Evaluation: Step 7999, Minibatch Loss= 0.0300, Training Accuracy= 0.019
+SNR: 0 BER: 0.3124299943447113 WER: 0.3124300241470337
+SNR: 1 BER: 0.2882300019264221 WER: 0.2882300019264221
+SNR: 2 BER: 0.26104000210762024 WER: 0.26103997230529785
+SNR: 3 BER: 0.23645000159740448 WER: 0.23645001649856567
+SNR: 4 BER: 0.21052999794483185 WER: 0.21052998304367065
+SNR: 5 BER: 0.18820999562740326 WER: 0.18821001052856445
+SNR: 6 BER: 0.1613900065422058 WER: 0.1613900065422058
+SNR: 7 BER: 0.14076000452041626 WER: 0.14076000452041626
+SNR: 8 BER: 0.1188800036907196 WER: 0.11887997388839722
+SNR: 9 BER: 0.1007699966430664 WER: 0.1007699966430664
+SNR: 10 BER: 0.0839100033044815 WER: 0.08390998840332031
+SNR: 11 BER: 0.06945999711751938 WER: 0.06945997476577759
+SNR: 12 BER: 0.055390000343322754 WER: 0.055390000343322754
+SNR: 13 BER: 0.04791000112891197 WER: 0.04790997505187988
+SNR: 14 BER: 0.037870001047849655 WER: 0.03786998987197876
+SNR: 15 BER: 0.031190000474452972 WER: 0.03118997812271118
+SNR: 16 BER: 0.024399999529123306 WER: 0.024399995803833008
+SNR: 17 BER: 0.019440000876784325 WER: 0.019439995288848877
+SNR: 18 BER: 0.01616000011563301 WER: 0.016160011291503906
+SNR: 19 BER: 0.013129999861121178 WER: 0.013130009174346924
+SNR: 20 BER: 0.011239999905228615 WER: 0.011240005493164062
+
+Direct Rayleigh Channel Results:
+BER: [0.31242999 0.28823    0.26104    0.23645    0.21053    0.18821
+ 0.16139001 0.14076    0.11888    0.10077    0.08391    0.06946
+ 0.05539    0.04791    0.03787    0.03119    0.0244     0.01944
+ 0.01616    0.01313    0.01124   ]
+WER: [0.31243002 0.28823    0.26103997 0.23645002 0.21052998 0.18821001
+ 0.16139001 0.14076    0.11887997 0.10077    0.08390999 0.06945997
+ 0.05539    0.04790998 0.03786999 0.03118998 0.0244     0.01944
+ 0.01616001 0.01313001 0.01124001]
+iteration is  1
+Training step 0
+Evaluation: Step 0, Minibatch Loss= 0.0240, Training Accuracy= 0.013
+Training step 1000
+Evaluation: Step 1000, Minibatch Loss= 0.0229, Training Accuracy= 0.009
+Training step 2000
+Evaluation: Step 2000, Minibatch Loss= 0.0398, Training Accuracy= 0.013
+Training step 3000
+Evaluation: Step 3000, Minibatch Loss= 0.0414, Training Accuracy= 0.016
+Training step 4000
+Evaluation: Step 4000, Minibatch Loss= 0.0306, Training Accuracy= 0.013
+Training step 5000
+Evaluation: Step 5000, Minibatch Loss= 0.0241, Training Accuracy= 0.006
+Training step 6000
+Evaluation: Step 6000, Minibatch Loss= 0.0267, Training Accuracy= 0.013
+Training step 7000
+Evaluation: Step 7000, Minibatch Loss= 0.0203, Training Accuracy= 0.009
+Training step 8000
+Evaluation: Step 8000, Minibatch Loss= 0.0219, Training Accuracy= 0.013
+Evaluation: Step 8499, Minibatch Loss= 0.0204, Training Accuracy= 0.016
+SNR: 0 BER: 0.2807199954986572 WER: 0.2807199954986572
+SNR: 1 BER: 0.258870005607605 WER: 0.258870005607605
+SNR: 2 BER: 0.2352599948644638 WER: 0.235260009765625
+SNR: 3 BER: 0.2178799957036972 WER: 0.2178800106048584
+SNR: 4 BER: 0.19141000509262085 WER: 0.19141000509262085
+SNR: 5 BER: 0.17197999358177185 WER: 0.17198002338409424
+SNR: 6 BER: 0.14943000674247742 WER: 0.14942997694015503
+SNR: 7 BER: 0.12775999307632446 WER: 0.12775999307632446
+SNR: 8 BER: 0.10956999659538269 WER: 0.10957002639770508
+SNR: 9 BER: 0.0916299968957901 WER: 0.0916299819946289
+SNR: 10 BER: 0.0774800032377243 WER: 0.0774800181388855
+SNR: 11 BER: 0.06487999856472015 WER: 0.06488001346588135
+SNR: 12 BER: 0.05435999855399132 WER: 0.05435997247695923
+SNR: 13 BER: 0.04405000060796738 WER: 0.044049978256225586
+SNR: 14 BER: 0.03626000136137009 WER: 0.036260008811950684
+SNR: 15 BER: 0.028950000181794167 WER: 0.028949975967407227
+SNR: 16 BER: 0.02418000064790249 WER: 0.02417999505996704
+SNR: 17 BER: 0.018950000405311584 WER: 0.01894998550415039
+SNR: 18 BER: 0.01597999967634678 WER: 0.015980005264282227
+SNR: 19 BER: 0.012690000236034393 WER: 0.01269000768661499
+SNR: 20 BER: 0.009720000438392162 WER: 0.009720027446746826
+
+Direct Rayleigh Channel Results:
+BER: [0.28072    0.25887001 0.23525999 0.21788    0.19141001 0.17197999
+ 0.14943001 0.12775999 0.10957    0.09163    0.07748    0.06488
+ 0.05436    0.04405    0.03626    0.02895    0.02418    0.01895
+ 0.01598    0.01269    0.00972   ]
+WER: [0.28072    0.25887001 0.23526001 0.21788001 0.19141001 0.17198002
+ 0.14942998 0.12775999 0.10957003 0.09162998 0.07748002 0.06488001
+ 0.05435997 0.04404998 0.03626001 0.02894998 0.02418    0.01894999
+ 0.01598001 0.01269001 0.00972003]
+iteration is  2
+Training step 0
+Evaluation: Step 0, Minibatch Loss= 0.0199, Training Accuracy= 0.013
+Training step 1000
+Evaluation: Step 1000, Minibatch Loss= 0.0110, Training Accuracy= 0.006
+Training step 2000
+Evaluation: Step 2000, Minibatch Loss= 0.0395, Training Accuracy= 0.022
+Training step 3000
+Evaluation: Step 3000, Minibatch Loss= 0.0155, Training Accuracy= 0.009
+Training step 4000
+Evaluation: Step 4000, Minibatch Loss= 0.0281, Training Accuracy= 0.006
+Training step 5000
+Evaluation: Step 5000, Minibatch Loss= 0.0459, Training Accuracy= 0.016
+Training step 6000
+Evaluation: Step 6000, Minibatch Loss= 0.0306, Training Accuracy= 0.016
+Training step 7000
+Evaluation: Step 7000, Minibatch Loss= 0.0153, Training Accuracy= 0.006
+Training step 8000
+Evaluation: Step 8000, Minibatch Loss= 0.0043, Training Accuracy= 0.000
+Evaluation: Step 8999, Minibatch Loss= 0.0104, Training Accuracy= 0.006
+SNR: 0 BER: 0.21211999654769897 WER: 0.21211999654769897
+SNR: 1 BER: 0.1905899941921234 WER: 0.1905900239944458
+SNR: 2 BER: 0.1693200021982193 WER: 0.1693199872970581
+SNR: 3 BER: 0.1468600034713745 WER: 0.1468600034713745
+SNR: 4 BER: 0.12748999893665314 WER: 0.12748998403549194
+SNR: 5 BER: 0.10964000225067139 WER: 0.10964000225067139
+SNR: 6 BER: 0.0940999984741211 WER: 0.0940999984741211
+SNR: 7 BER: 0.07793000340461731 WER: 0.07792997360229492
+SNR: 8 BER: 0.06577000021934509 WER: 0.0657699704170227
+SNR: 9 BER: 0.05403999984264374 WER: 0.05404001474380493
+SNR: 10 BER: 0.04334000125527382 WER: 0.04334002733230591
+SNR: 11 BER: 0.035750001668930054 WER: 0.035749971866607666
+SNR: 12 BER: 0.029260000213980675 WER: 0.029259979724884033
+SNR: 13 BER: 0.024089999496936798 WER: 0.0240899920463562
+SNR: 14 BER: 0.018890000879764557 WER: 0.018890023231506348
+SNR: 15 BER: 0.015289999544620514 WER: 0.015290021896362305
+SNR: 16 BER: 0.01217000000178814 WER: 0.012170016765594482
+SNR: 17 BER: 0.009960000403225422 WER: 0.009959995746612549
+SNR: 18 BER: 0.007470000069588423 WER: 0.0074700117111206055
+SNR: 19 BER: 0.0060800001956522465 WER: 0.006079971790313721
+SNR: 20 BER: 0.004780000075697899 WER: 0.004779994487762451
+
+Direct Rayleigh Channel Results:
+BER: [0.21212    0.19058999 0.16932    0.14686    0.12749    0.10964
+ 0.0941     0.07793    0.06577    0.05404    0.04334    0.03575
+ 0.02926    0.02409    0.01889    0.01529    0.01217    0.00996
+ 0.00747    0.00608    0.00478   ]
+WER: [0.21212    0.19059002 0.16931999 0.14686    0.12748998 0.10964
+ 0.0941     0.07792997 0.06576997 0.05404001 0.04334003 0.03574997
+ 0.02925998 0.02408999 0.01889002 0.01529002 0.01217002 0.00996
+ 0.00747001 0.00607997 0.00477999]
+iteration is  3
+Training step 0
+Evaluation: Step 0, Minibatch Loss= 0.0158, Training Accuracy= 0.009
+Training step 1000
+Evaluation: Step 1000, Minibatch Loss= 0.0069, Training Accuracy= 0.003
+Training step 2000
+Evaluation: Step 2000, Minibatch Loss= 0.0056, Training Accuracy= 0.003
+Training step 3000
+Evaluation: Step 3000, Minibatch Loss= 0.0096, Training Accuracy= 0.006
+Training step 4000
+Evaluation: Step 4000, Minibatch Loss= 0.0156, Training Accuracy= 0.006
+Training step 5000
+Evaluation: Step 5000, Minibatch Loss= 0.0121, Training Accuracy= 0.006
+Training step 6000
+Evaluation: Step 6000, Minibatch Loss= 0.0157, Training Accuracy= 0.009
+Training step 7000
+Evaluation: Step 7000, Minibatch Loss= 0.0267, Training Accuracy= 0.013
+Training step 8000
+Evaluation: Step 8000, Minibatch Loss= 0.0132, Training Accuracy= 0.009
+Training step 9000
+Evaluation: Step 9000, Minibatch Loss= 0.0096, Training Accuracy= 0.006
+Evaluation: Step 9499, Minibatch Loss= 0.0139, Training Accuracy= 0.006
+SNR: 0 BER: 0.2146800011396408 WER: 0.214680016040802
+SNR: 1 BER: 0.1891999989748001 WER: 0.18919998407363892
+SNR: 2 BER: 0.16737000644207 WER: 0.1673700213432312
+SNR: 3 BER: 0.14770999550819397 WER: 0.14771002531051636
+SNR: 4 BER: 0.1277099996805191 WER: 0.1277099847793579
+SNR: 5 BER: 0.10948000103235245 WER: 0.10948002338409424
+SNR: 6 BER: 0.09330999851226807 WER: 0.09330999851226807
+SNR: 7 BER: 0.07915999740362167 WER: 0.07915997505187988
+SNR: 8 BER: 0.06364999711513519 WER: 0.06365001201629639
+SNR: 9 BER: 0.052889999002218246 WER: 0.052890002727508545
+SNR: 10 BER: 0.043480001389980316 WER: 0.043479979038238525
+SNR: 11 BER: 0.036320000886917114 WER: 0.03631997108459473
+SNR: 12 BER: 0.029100000858306885 WER: 0.029100000858306885
+SNR: 13 BER: 0.023080000653862953 WER: 0.023079991340637207
+SNR: 14 BER: 0.019360000267624855 WER: 0.019360005855560303
+SNR: 15 BER: 0.014999999664723873 WER: 0.014999985694885254
+SNR: 16 BER: 0.012690000236034393 WER: 0.01269000768661499
+SNR: 17 BER: 0.009549999609589577 WER: 0.009549975395202637
+SNR: 18 BER: 0.007619999814778566 WER: 0.007619976997375488
+SNR: 19 BER: 0.0062500000931322575 WER: 0.00625002384185791
+SNR: 20 BER: 0.005229999776929617 WER: 0.00523000955581665
+
+Direct Rayleigh Channel Results:
+BER: [0.21468    0.1892     0.16737001 0.14771    0.12771    0.10948
+ 0.09331    0.07916    0.06365    0.05289    0.04348    0.03632
+ 0.0291     0.02308    0.01936    0.015      0.01269    0.00955
+ 0.00762    0.00625    0.00523   ]
+WER: [0.21468002 0.18919998 0.16737002 0.14771003 0.12770998 0.10948002
+ 0.09331    0.07915998 0.06365001 0.05289    0.04347998 0.03631997
+ 0.0291     0.02307999 0.01936001 0.01499999 0.01269001 0.00954998
+ 0.00761998 0.00625002 0.00523001]
+iteration is  4
+Training step 0
+Evaluation: Step 0, Minibatch Loss= 0.0094, Training Accuracy= 0.003
+Training step 1000
+Evaluation: Step 1000, Minibatch Loss= 0.0091, Training Accuracy= 0.006
+Training step 2000
+Evaluation: Step 2000, Minibatch Loss= 0.0092, Training Accuracy= 0.003
+Training step 3000
+Evaluation: Step 3000, Minibatch Loss= 0.0945, Training Accuracy= 0.034
+Training step 4000
+Evaluation: Step 4000, Minibatch Loss= 0.0116, Training Accuracy= 0.006
+Training step 5000
+Evaluation: Step 5000, Minibatch Loss= 0.0228, Training Accuracy= 0.009
+Training step 6000
+Evaluation: Step 6000, Minibatch Loss= 0.0140, Training Accuracy= 0.009
+Training step 7000
+Evaluation: Step 7000, Minibatch Loss= 0.0231, Training Accuracy= 0.009
+Training step 8000
+Evaluation: Step 8000, Minibatch Loss= 0.0375, Training Accuracy= 0.022
+Training step 9000
+Evaluation: Step 9000, Minibatch Loss= 0.0262, Training Accuracy= 0.016
+Evaluation: Step 9999, Minibatch Loss= 0.0177, Training Accuracy= 0.009
+SNR: 0 BER: 0.28325000405311584 WER: 0.28324997425079346
+SNR: 1 BER: 0.26155999302864075 WER: 0.26156002283096313
+SNR: 2 BER: 0.23824000358581543 WER: 0.23824000358581543
+SNR: 3 BER: 0.2178100049495697 WER: 0.21780997514724731
+SNR: 4 BER: 0.19471000134944916 WER: 0.19471001625061035
+SNR: 5 BER: 0.1726599931716919 WER: 0.1726599931716919
+SNR: 6 BER: 0.15080000460147858 WER: 0.15079998970031738
+SNR: 7 BER: 0.13009999692440033 WER: 0.13010001182556152
+SNR: 8 BER: 0.1115799993276596 WER: 0.1115800142288208
+SNR: 9 BER: 0.094480000436306 WER: 0.09447997808456421
+SNR: 10 BER: 0.07733999937772751 WER: 0.0773400068283081
+SNR: 11 BER: 0.06469999998807907 WER: 0.06470000743865967
+SNR: 12 BER: 0.053929999470710754 WER: 0.05392998456954956
+SNR: 13 BER: 0.04301000013947487 WER: 0.04300999641418457
+SNR: 14 BER: 0.035679999738931656 WER: 0.03567999601364136
+SNR: 15 BER: 0.02896999940276146 WER: 0.028970003128051758
+SNR: 16 BER: 0.02401999942958355 WER: 0.024020016193389893
+SNR: 17 BER: 0.01947000063955784 WER: 0.0194699764251709
+SNR: 18 BER: 0.01576000079512596 WER: 0.01576000452041626
+SNR: 19 BER: 0.011610000394284725 WER: 0.011609971523284912
+SNR: 20 BER: 0.009510000236332417 WER: 0.00950998067855835
+
+Direct Rayleigh Channel Results:
+BER: [0.28325    0.26155999 0.23824    0.21781    0.19471    0.17265999
+ 0.1508     0.1301     0.11158    0.09448    0.07734    0.0647
+ 0.05393    0.04301    0.03568    0.02897    0.02402    0.01947
+ 0.01576    0.01161    0.00951   ]
+WER: [0.28324997 0.26156002 0.23824    0.21780998 0.19471002 0.17265999
+ 0.15079999 0.13010001 0.11158001 0.09447998 0.07734001 0.06470001
+ 0.05392998 0.04301    0.03568    0.02897    0.02402002 0.01946998
+ 0.01576    0.01160997 0.00950998]
+iteration is  5
+Training step 0
+Evaluation: Step 0, Minibatch Loss= 0.0121, Training Accuracy= 0.003
+Training step 1000
+Evaluation: Step 1000, Minibatch Loss= 0.0155, Training Accuracy= 0.006

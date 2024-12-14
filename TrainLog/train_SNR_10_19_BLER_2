@@ -1,0 +1,747 @@
+/usr/bin/python3 /tmp/41fa7789-ab09-4f20-96ad-e4f95e93f8fa/End2EndConvRayleigh_simple.py
+WARNING:tensorflow:From /tmp/41fa7789-ab09-4f20-96ad-e4f95e93f8fa/End2EndConvRayleigh_simple.py:133: The name tf.placeholder is deprecated. Please use tf.compat.v1.placeholder instead.
+
+WARNING:tensorflow:From /tmp/41fa7789-ab09-4f20-96ad-e4f95e93f8fa/End2EndConvRayleigh_simple.py:49: The name tf.variable_scope is deprecated. Please use tf.compat.v1.variable_scope instead.
+
+WARNING:tensorflow:From /tmp/41fa7789-ab09-4f20-96ad-e4f95e93f8fa/End2EndConvRayleigh_simple.py:49: The name tf.AUTO_REUSE is deprecated. Please use tf.compat.v1.AUTO_REUSE instead.
+
+WARNING:tensorflow:From /tmp/41fa7789-ab09-4f20-96ad-e4f95e93f8fa/End2EndConvRayleigh_simple.py:50: conv1d (from tensorflow.python.layers.convolutional) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.keras.layers.Conv1D` instead.
+WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/tensorflow_core/python/layers/convolutional.py:218: Layer.apply (from tensorflow.python.keras.engine.base_layer) is deprecated and will be removed in a future version.
+Instructions for updating:
+Please use `layer.__call__` method instead.
+WARNING:tensorflow:From /tmp/41fa7789-ab09-4f20-96ad-e4f95e93f8fa/End2EndConvRayleigh_simple.py:58: calling l2_normalize (from tensorflow.python.ops.nn_impl) with dim is deprecated and will be removed in a future version.
+Instructions for updating:
+dim is deprecated, use axis instead
+WARNING:tensorflow:From /tmp/41fa7789-ab09-4f20-96ad-e4f95e93f8fa/End2EndConvRayleigh_simple.py:108: The name tf.random_normal is deprecated. Please use tf.random.normal instead.
+
+Shape of the output complex Tensor("Add:0", shape=(?, 2), dtype=complex64) Tensor("Reshape_2:0", shape=(?, 2, 1), dtype=complex64)
+WARNING:tensorflow:From /tmp/41fa7789-ab09-4f20-96ad-e4f95e93f8fa/End2EndConvRayleigh_simple.py:118: The name tf.real is deprecated. Please use tf.math.real instead.
+
+WARNING:tensorflow:From /tmp/41fa7789-ab09-4f20-96ad-e4f95e93f8fa/End2EndConvRayleigh_simple.py:118: The name tf.imag is deprecated. Please use tf.math.imag instead.
+
+shapes G and R and channel info Tensor("generator/conv1d_3/BiasAdd:0", shape=(?, 2, 2), dtype=float32) Tensor("concat_2:0", shape=(?, 2, 2), dtype=float32) Tensor("Placeholder_5:0", shape=(?, 2, 2), dtype=float32)
+Shape of the output complex Tensor("Add_1:0", shape=(?, 2), dtype=complex64) Tensor("Reshape_3:0", shape=(?, 2, 1), dtype=complex64)
+WARNING:tensorflow:From /tmp/41fa7789-ab09-4f20-96ad-e4f95e93f8fa/End2EndConvRayleigh_simple.py:42: dense (from tensorflow.python.layers.core) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use keras.layers.Dense instead.
+WARNING:tensorflow:From /tmp/41fa7789-ab09-4f20-96ad-e4f95e93f8fa/End2EndConvRayleigh_simple.py:159: The name tf.trainable_variables is deprecated. Please use tf.compat.v1.trainable_variables instead.
+
+WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/tensorflow_core/python/ops/nn_impl.py:183: where (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+WARNING:tensorflow:From /tmp/41fa7789-ab09-4f20-96ad-e4f95e93f8fa/End2EndConvRayleigh_simple.py:174: The name tf.train.AdamOptimizer is deprecated. Please use tf.compat.v1.train.AdamOptimizer instead.
+
+WARNING:tensorflow:From /tmp/41fa7789-ab09-4f20-96ad-e4f95e93f8fa/End2EndConvRayleigh_simple.py:187: The name tf.global_variables_initializer is deprecated. Please use tf.compat.v1.global_variables_initializer instead.
+
+WARNING:tensorflow:From /tmp/41fa7789-ab09-4f20-96ad-e4f95e93f8fa/End2EndConvRayleigh_simple.py:224: The name tf.ConfigProto is deprecated. Please use tf.compat.v1.ConfigProto instead.
+
+WARNING:tensorflow:From /tmp/41fa7789-ab09-4f20-96ad-e4f95e93f8fa/End2EndConvRayleigh_simple.py:226: The name tf.Session is deprecated. Please use tf.compat.v1.Session instead.
+
+2024-11-05 23:38:45.672587: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2024-11-05 23:38:45.683085: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 3193995000 Hz
+2024-11-05 23:38:45.684862: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x59bd9d0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2024-11-05 23:38:45.684899: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+2024-11-05 23:38:45.687590: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcuda.so.1
+2024-11-05 23:38:45.687874: E tensorflow/stream_executor/cuda/cuda_driver.cc:318] failed call to cuInit: UNKNOWN ERROR (-1)
+2024-11-05 23:38:45.687915: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (143580a4f198): /proc/driver/nvidia/version does not exist
+iteration is  0
+Training ChannelGAN, step is  0
+Training ChannelGAN, step is  500
+Training ChannelGAN, step is  1000
+Training ChannelGAN, step is  1500
+Training ChannelGAN, step is  2000
+Training ChannelGAN, step is  2500
+Training ChannelGAN, step is  3000
+Training ChannelGAN, step is  3500
+Training ChannelGAN, step is  4000
+Training ChannelGAN, step is  4500
+Training ChannelGAN, step is  5000
+Training ChannelGAN, step is  5500
+Training ChannelGAN, step is  6000
+Training ChannelGAN, step is  6500
+Training ChannelGAN, step is  7000
+Training ChannelGAN, step is  7500
+Training ChannelGAN, step is  8000
+Training transmitter, step is  0
+Training transmitter, step is  500
+Training transmitter, step is  1000
+Training transmitter, step is  1500
+Training transmitter, step is  2000
+Training transmitter, step is  2500
+Training transmitter, step is  3000
+Training transmitter, step is  3500
+Training transmitter, step is  4000
+Training transmitter, step is  4500
+Training transmitter, step is  5000
+Training transmitter, step is  5500
+Training transmitter, step is  6000
+Training transmitter, step is  6500
+Training transmitter, step is  7000
+Training receiver, step is  0
+Training receiver, step is  500
+Training receiver, step is  1000
+Training receiver, step is  1500
+Training receiver, step is  2000
+Training receiver, step is  2500
+Training receiver, step is  3000
+Training receiver, step is  3500
+Training receiver, step is  4000
+Training receiver, step is  4500
+Training receiver, step is  5000
+Training receiver, step is  5500
+Training receiver, step is  6000
+Training receiver, step is  6500
+Training receiver, step is  7000
+Training receiver, step is  7500
+Training receiver, step is  8000
+Real Channel Evaluation: Step 8499, Minibatch Loss= 0.0218, Training Accuracy= 0.009
+Generated Channel Evaluation: Step 8499, Minibatch Loss= 0.0178, Training Accuracy= 0.008
+2024-11-05 23:44:26.748416: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 2048000000 exceeds 10% of system memory.
+2024-11-05 23:44:28.185616: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 2048000000 exceeds 10% of system memory.
+SNR: 10 BER: 0.10239049792289734 WER: 0.16668301820755005
+2024-11-05 23:44:31.479500: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 2048000000 exceeds 10% of system memory.
+2024-11-05 23:44:32.940122: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 2048000000 exceeds 10% of system memory.
+SNR: 11 BER: 0.08663350343704224 WER: 0.14119702577590942
+2024-11-05 23:44:36.463456: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 2048000000 exceeds 10% of system memory.
+SNR: 12 BER: 0.07309100031852722 WER: 0.11908197402954102
+SNR: 13 BER: 0.06115199998021126 WER: 0.10004901885986328
+SNR: 14 BER: 0.05015850067138672 WER: 0.08226102590560913
+SNR: 15 BER: 0.041464999318122864 WER: 0.06817102432250977
+SNR: 16 BER: 0.03430749848484993 WER: 0.05629497766494751
+SNR: 17 BER: 0.02793549932539463 WER: 0.04600399732589722
+SNR: 18 BER: 0.02283550053834915 WER: 0.03770202398300171
+SNR: 19 BER: 0.018517499789595604 WER: 0.030671000480651855
+[0.1023905 0.0866335 0.073091  0.061152  0.0501585 0.041465  0.0343075
+ 0.0279355 0.0228355 0.0185175]
+[0.16668302 0.14119703 0.11908197 0.10004902 0.08226103 0.06817102
+ 0.05629498 0.046004   0.03770202 0.030671  ]
+iteration is  1
+Training ChannelGAN, step is  0
+Training ChannelGAN, step is  500
+Training ChannelGAN, step is  1000
+Training ChannelGAN, step is  1500
+Training ChannelGAN, step is  2000
+Training ChannelGAN, step is  2500
+Training ChannelGAN, step is  3000
+Training ChannelGAN, step is  3500
+Training ChannelGAN, step is  4000
+Training ChannelGAN, step is  4500
+Training ChannelGAN, step is  5000
+Training ChannelGAN, step is  5500
+Training ChannelGAN, step is  6000
+Training ChannelGAN, step is  6500
+Training ChannelGAN, step is  7000
+Training ChannelGAN, step is  7500
+Training ChannelGAN, step is  8000
+Training transmitter, step is  0
+Training transmitter, step is  500
+Training transmitter, step is  1000
+Training transmitter, step is  1500
+Training transmitter, step is  2000
+Training transmitter, step is  2500
+Training transmitter, step is  3000
+Training transmitter, step is  3500
+Training transmitter, step is  4000
+Training transmitter, step is  4500
+Training transmitter, step is  5000
+Training transmitter, step is  5500
+Training transmitter, step is  6000
+Training transmitter, step is  6500
+Training transmitter, step is  7000
+Training receiver, step is  0
+Training receiver, step is  500
+Training receiver, step is  1000
+Training receiver, step is  1500
+Training receiver, step is  2000
+Training receiver, step is  2500
+Training receiver, step is  3000
+Training receiver, step is  3500
+Training receiver, step is  4000
+Training receiver, step is  4500
+Training receiver, step is  5000
+Training receiver, step is  5500
+Training receiver, step is  6000
+Training receiver, step is  6500
+Training receiver, step is  7000
+Training receiver, step is  7500
+Training receiver, step is  8000
+Real Channel Evaluation: Step 8499, Minibatch Loss= 0.0095, Training Accuracy= 0.005
+Generated Channel Evaluation: Step 8499, Minibatch Loss= 0.0089, Training Accuracy= 0.002
+SNR: 10 BER: 0.06216000020503998 WER: 0.10196000337600708
+SNR: 11 BER: 0.05081100016832352 WER: 0.08358097076416016
+SNR: 12 BER: 0.041807498782873154 WER: 0.06898397207260132
+SNR: 13 BER: 0.033582501113414764 WER: 0.055438995361328125
+SNR: 14 BER: 0.027452999725937843 WER: 0.04539799690246582
+SNR: 15 BER: 0.021974999457597733 WER: 0.036337971687316895
+SNR: 16 BER: 0.01764100044965744 WER: 0.029250025749206543
+SNR: 17 BER: 0.014143000356853008 WER: 0.023478984832763672
+SNR: 18 BER: 0.011284500360488892 WER: 0.01886802911758423
+SNR: 19 BER: 0.009002500213682652 WER: 0.015118002891540527
+[0.06216   0.050811  0.0418075 0.0335825 0.027453  0.021975  0.017641
+ 0.014143  0.0112845 0.0090025]
+[0.10196    0.08358097 0.06898397 0.055439   0.045398   0.03633797
+ 0.02925003 0.02347898 0.01886803 0.015118  ]
+iteration is  2
+Training ChannelGAN, step is  0
+Training ChannelGAN, step is  500
+Training ChannelGAN, step is  1000
+Training ChannelGAN, step is  1500
+Training ChannelGAN, step is  2000
+Training ChannelGAN, step is  2500
+Training ChannelGAN, step is  3000
+Training ChannelGAN, step is  3500
+Training ChannelGAN, step is  4000
+Training ChannelGAN, step is  4500
+Training ChannelGAN, step is  5000
+Training ChannelGAN, step is  5500
+Training ChannelGAN, step is  6000
+Training ChannelGAN, step is  6500
+Training ChannelGAN, step is  7000
+Training ChannelGAN, step is  7500
+Training ChannelGAN, step is  8000
+Training transmitter, step is  0
+Training transmitter, step is  500
+Training transmitter, step is  1000
+Training transmitter, step is  1500
+Training transmitter, step is  2000
+Training transmitter, step is  2500
+Training transmitter, step is  3000
+Training transmitter, step is  3500
+Training transmitter, step is  4000
+Training transmitter, step is  4500
+Training transmitter, step is  5000
+Training transmitter, step is  5500
+Training transmitter, step is  6000
+Training transmitter, step is  6500
+Training transmitter, step is  7000
+Training receiver, step is  0
+Training receiver, step is  500
+Training receiver, step is  1000
+Training receiver, step is  1500
+Training receiver, step is  2000
+Training receiver, step is  2500
+Training receiver, step is  3000
+Training receiver, step is  3500
+Training receiver, step is  4000
+Training receiver, step is  4500
+Training receiver, step is  5000
+Training receiver, step is  5500
+Training receiver, step is  6000
+Training receiver, step is  6500
+Training receiver, step is  7000
+Training receiver, step is  7500
+Training receiver, step is  8000
+Real Channel Evaluation: Step 8499, Minibatch Loss= 0.0126, Training Accuracy= 0.006
+Generated Channel Evaluation: Step 8499, Minibatch Loss= 0.0067, Training Accuracy= 0.002
+SNR: 10 BER: 0.054854001849889755 WER: 0.09144598245620728
+SNR: 11 BER: 0.045138001441955566 WER: 0.07550197839736938
+SNR: 12 BER: 0.03680749982595444 WER: 0.061627984046936035
+SNR: 13 BER: 0.03013950027525425 WER: 0.05055201053619385
+SNR: 14 BER: 0.02407650090754032 WER: 0.040583014488220215
+SNR: 15 BER: 0.019406499341130257 WER: 0.0326390266418457
+SNR: 16 BER: 0.015526499599218369 WER: 0.026099979877471924
+SNR: 17 BER: 0.0125749995931983 WER: 0.02126002311706543
+SNR: 18 BER: 0.009968499653041363 WER: 0.01692098379135132
+SNR: 19 BER: 0.0080765001475811 WER: 0.013679981231689453
+[0.054854  0.045138  0.0368075 0.0301395 0.0240765 0.0194065 0.0155265
+ 0.012575  0.0099685 0.0080765]
+[0.09144598 0.07550198 0.06162798 0.05055201 0.04058301 0.03263903
+ 0.02609998 0.02126002 0.01692098 0.01367998]
+iteration is  3
+Training ChannelGAN, step is  0
+Training ChannelGAN, step is  500
+Training ChannelGAN, step is  1000
+Training ChannelGAN, step is  1500
+Training ChannelGAN, step is  2000
+Training ChannelGAN, step is  2500
+Training ChannelGAN, step is  3000
+Training ChannelGAN, step is  3500
+Training ChannelGAN, step is  4000
+Training ChannelGAN, step is  4500
+Training ChannelGAN, step is  5000
+Training ChannelGAN, step is  5500
+Training ChannelGAN, step is  6000
+Training ChannelGAN, step is  6500
+Training ChannelGAN, step is  7000
+Training ChannelGAN, step is  7500
+Training ChannelGAN, step is  8000
+Training transmitter, step is  0
+Training transmitter, step is  500
+Training transmitter, step is  1000
+Training transmitter, step is  1500
+Training transmitter, step is  2000
+Training transmitter, step is  2500
+Training transmitter, step is  3000
+Training transmitter, step is  3500
+Training transmitter, step is  4000
+Training transmitter, step is  4500
+Training transmitter, step is  5000
+Training transmitter, step is  5500
+Training transmitter, step is  6000
+Training transmitter, step is  6500
+Training transmitter, step is  7000
+Training receiver, step is  0
+Training receiver, step is  500
+Training receiver, step is  1000
+Training receiver, step is  1500
+Training receiver, step is  2000
+Training receiver, step is  2500
+Training receiver, step is  3000
+Training receiver, step is  3500
+Training receiver, step is  4000
+Training receiver, step is  4500
+Training receiver, step is  5000
+Training receiver, step is  5500
+Training receiver, step is  6000
+Training receiver, step is  6500
+Training receiver, step is  7000
+Training receiver, step is  7500
+Training receiver, step is  8000
+Real Channel Evaluation: Step 8499, Minibatch Loss= 0.0031, Training Accuracy= 0.000
+Generated Channel Evaluation: Step 8499, Minibatch Loss= 0.0005, Training Accuracy= 0.000
+SNR: 10 BER: 0.05003499984741211 WER: 0.08386099338531494
+SNR: 11 BER: 0.04074449837207794 WER: 0.06835097074508667
+SNR: 12 BER: 0.03319049999117851 WER: 0.0557439923286438
+SNR: 13 BER: 0.02674349956214428 WER: 0.04515397548675537
+SNR: 14 BER: 0.021603500470519066 WER: 0.03641098737716675
+SNR: 15 BER: 0.01740800030529499 WER: 0.029377996921539307
+SNR: 16 BER: 0.013877499848604202 WER: 0.023441970348358154
+SNR: 17 BER: 0.011075500398874283 WER: 0.018782973289489746
+SNR: 18 BER: 0.008969499729573727 WER: 0.015269994735717773
+SNR: 19 BER: 0.007172000128775835 WER: 0.012248992919921875
+[0.050035  0.0407445 0.0331905 0.0267435 0.0216035 0.017408  0.0138775
+ 0.0110755 0.0089695 0.007172 ]
+[0.08386099 0.06835097 0.05574399 0.04515398 0.03641099 0.029378
+ 0.02344197 0.01878297 0.01526999 0.01224899]
+iteration is  4
+Training ChannelGAN, step is  0
+Training ChannelGAN, step is  500
+Training ChannelGAN, step is  1000
+Training ChannelGAN, step is  1500
+Training ChannelGAN, step is  2000
+Training ChannelGAN, step is  2500
+Training ChannelGAN, step is  3000
+Training ChannelGAN, step is  3500
+Training ChannelGAN, step is  4000
+Training ChannelGAN, step is  4500
+Training ChannelGAN, step is  5000
+Training ChannelGAN, step is  5500
+Training ChannelGAN, step is  6000
+Training ChannelGAN, step is  6500
+Training ChannelGAN, step is  7000
+Training ChannelGAN, step is  7500
+Training ChannelGAN, step is  8000
+Training transmitter, step is  0
+Training transmitter, step is  500
+Training transmitter, step is  1000
+Training transmitter, step is  1500
+Training transmitter, step is  2000
+Training transmitter, step is  2500
+Training transmitter, step is  3000
+Training transmitter, step is  3500
+Training transmitter, step is  4000
+Training transmitter, step is  4500
+Training transmitter, step is  5000
+Training transmitter, step is  5500
+Training transmitter, step is  6000
+Training transmitter, step is  6500
+Training transmitter, step is  7000
+Training receiver, step is  0
+Training receiver, step is  500
+Training receiver, step is  1000
+Training receiver, step is  1500
+Training receiver, step is  2000
+Training receiver, step is  2500
+Training receiver, step is  3000
+Training receiver, step is  3500
+Training receiver, step is  4000
+Training receiver, step is  4500
+Training receiver, step is  5000
+Training receiver, step is  5500
+Training receiver, step is  6000
+Training receiver, step is  6500
+Training receiver, step is  7000
+Training receiver, step is  7500
+Training receiver, step is  8000
+Real Channel Evaluation: Step 8499, Minibatch Loss= 0.0222, Training Accuracy= 0.013
+Generated Channel Evaluation: Step 8499, Minibatch Loss= 0.0054, Training Accuracy= 0.000
+SNR: 10 BER: 0.045830998569726944 WER: 0.07565200328826904
+SNR: 11 BER: 0.03758250176906586 WER: 0.06224602460861206
+SNR: 12 BER: 0.030252499505877495 WER: 0.05007898807525635
+SNR: 13 BER: 0.024601999670267105 WER: 0.0408099889755249
+SNR: 14 BER: 0.019741499796509743 WER: 0.03291100263595581
+SNR: 15 BER: 0.015827499330043793 WER: 0.02633202075958252
+SNR: 16 BER: 0.012861499562859535 WER: 0.021431028842926025
+SNR: 17 BER: 0.010220999829471111 WER: 0.01707702875137329
+SNR: 18 BER: 0.008168499916791916 WER: 0.013615012168884277
+SNR: 19 BER: 0.006421499885618687 WER: 0.01077800989151001
+[0.045831  0.0375825 0.0302525 0.024602  0.0197415 0.0158275 0.0128615
+ 0.010221  0.0081685 0.0064215]
+[0.075652   0.06224602 0.05007899 0.04080999 0.032911   0.02633202
+ 0.02143103 0.01707703 0.01361501 0.01077801]
+iteration is  5
+Training ChannelGAN, step is  0
+Training ChannelGAN, step is  500
+Training ChannelGAN, step is  1000
+Training ChannelGAN, step is  1500
+Training ChannelGAN, step is  2000
+Training ChannelGAN, step is  2500
+Training ChannelGAN, step is  3000
+Training ChannelGAN, step is  3500
+Training ChannelGAN, step is  4000
+Training ChannelGAN, step is  4500
+Training ChannelGAN, step is  5000
+Training ChannelGAN, step is  5500
+Training ChannelGAN, step is  6000
+Training ChannelGAN, step is  6500
+Training ChannelGAN, step is  7000
+Training ChannelGAN, step is  7500
+Training ChannelGAN, step is  8000
+Training transmitter, step is  0
+Training transmitter, step is  500
+Training transmitter, step is  1000
+Training transmitter, step is  1500
+Training transmitter, step is  2000
+Training transmitter, step is  2500
+Training transmitter, step is  3000
+Training transmitter, step is  3500
+Training transmitter, step is  4000
+Training transmitter, step is  4500
+Training transmitter, step is  5000
+Training transmitter, step is  5500
+Training transmitter, step is  6000
+Training transmitter, step is  6500
+Training transmitter, step is  7000
+Training receiver, step is  0
+Training receiver, step is  500
+Training receiver, step is  1000
+Training receiver, step is  1500
+Training receiver, step is  2000
+Training receiver, step is  2500
+Training receiver, step is  3000
+Training receiver, step is  3500
+Training receiver, step is  4000
+Training receiver, step is  4500
+Training receiver, step is  5000
+Training receiver, step is  5500
+Training receiver, step is  6000
+Training receiver, step is  6500
+Training receiver, step is  7000
+Training receiver, step is  7500
+Training receiver, step is  8000
+Real Channel Evaluation: Step 8499, Minibatch Loss= 0.0253, Training Accuracy= 0.013
+Generated Channel Evaluation: Step 8499, Minibatch Loss= 0.0019, Training Accuracy= 0.000
+SNR: 10 BER: 0.04545550048351288 WER: 0.07458502054214478
+SNR: 11 BER: 0.036612000316381454 WER: 0.06032902002334595
+SNR: 12 BER: 0.029749000445008278 WER: 0.0490649938583374
+SNR: 13 BER: 0.02389650046825409 WER: 0.039425015449523926
+SNR: 14 BER: 0.019517000764608383 WER: 0.03221398591995239
+SNR: 15 BER: 0.015567000024020672 WER: 0.025812983512878418
+SNR: 16 BER: 0.012565500102937222 WER: 0.020870983600616455
+SNR: 17 BER: 0.009914999827742577 WER: 0.016499996185302734
+SNR: 18 BER: 0.008053000085055828 WER: 0.01343601942062378
+SNR: 19 BER: 0.006269500125199556 WER: 0.010531008243560791
+[0.0454555 0.036612  0.029749  0.0238965 0.019517  0.015567  0.0125655
+ 0.009915  0.008053  0.0062695]
+[0.07458502 0.06032902 0.04906499 0.03942502 0.03221399 0.02581298
+ 0.02087098 0.0165     0.01343602 0.01053101]
+iteration is  6
+Training ChannelGAN, step is  0
+Training ChannelGAN, step is  500
+Training ChannelGAN, step is  1000
+Training ChannelGAN, step is  1500
+Training ChannelGAN, step is  2000
+Training ChannelGAN, step is  2500
+Training ChannelGAN, step is  3000
+Training ChannelGAN, step is  3500
+Training ChannelGAN, step is  4000
+Training ChannelGAN, step is  4500
+Training ChannelGAN, step is  5000
+Training ChannelGAN, step is  5500
+Training ChannelGAN, step is  6000
+Training ChannelGAN, step is  6500
+Training ChannelGAN, step is  7000
+Training ChannelGAN, step is  7500
+Training ChannelGAN, step is  8000
+Training transmitter, step is  0
+Training transmitter, step is  500
+Training transmitter, step is  1000
+Training transmitter, step is  1500
+Training transmitter, step is  2000
+Training transmitter, step is  2500
+Training transmitter, step is  3000
+Training transmitter, step is  3500
+Training transmitter, step is  4000
+Training transmitter, step is  4500
+Training transmitter, step is  5000
+Training transmitter, step is  5500
+Training transmitter, step is  6000
+Training transmitter, step is  6500
+Training transmitter, step is  7000
+Training receiver, step is  0
+Training receiver, step is  500
+Training receiver, step is  1000
+Training receiver, step is  1500
+Training receiver, step is  2000
+Training receiver, step is  2500
+Training receiver, step is  3000
+Training receiver, step is  3500
+Training receiver, step is  4000
+Training receiver, step is  4500
+Training receiver, step is  5000
+Training receiver, step is  5500
+Training receiver, step is  6000
+Training receiver, step is  6500
+Training receiver, step is  7000
+Training receiver, step is  7500
+Training receiver, step is  8000
+Real Channel Evaluation: Step 8499, Minibatch Loss= 0.0024, Training Accuracy= 0.002
+Generated Channel Evaluation: Step 8499, Minibatch Loss= 0.0079, Training Accuracy= 0.002
+SNR: 10 BER: 0.04399299994111061 WER: 0.0708010196685791
+SNR: 11 BER: 0.03552800044417381 WER: 0.057372987270355225
+SNR: 12 BER: 0.028761999681591988 WER: 0.046409010887145996
+SNR: 13 BER: 0.02335049957036972 WER: 0.03777998685836792
+SNR: 14 BER: 0.018742000684142113 WER: 0.030281007289886475
+SNR: 15 BER: 0.014897000044584274 WER: 0.024351000785827637
+SNR: 16 BER: 0.011988500133156776 WER: 0.019465982913970947
+SNR: 17 BER: 0.00977800041437149 WER: 0.015888988971710205
+SNR: 18 BER: 0.007662999909371138 WER: 0.01250600814819336
+SNR: 19 BER: 0.006026499904692173 WER: 0.009935975074768066
+[0.043993  0.035528  0.028762  0.0233505 0.018742  0.014897  0.0119885
+ 0.009778  0.007663  0.0060265]
+[0.07080102 0.05737299 0.04640901 0.03777999 0.03028101 0.024351
+ 0.01946598 0.01588899 0.01250601 0.00993598]
+iteration is  7
+Training ChannelGAN, step is  0
+Training ChannelGAN, step is  500
+Training ChannelGAN, step is  1000
+Training ChannelGAN, step is  1500
+Training ChannelGAN, step is  2000
+Training ChannelGAN, step is  2500
+Training ChannelGAN, step is  3000
+Training ChannelGAN, step is  3500
+Training ChannelGAN, step is  4000
+Training ChannelGAN, step is  4500
+Training ChannelGAN, step is  5000
+Training ChannelGAN, step is  5500
+Training ChannelGAN, step is  6000
+Training ChannelGAN, step is  6500
+Training ChannelGAN, step is  7000
+Training ChannelGAN, step is  7500
+Training ChannelGAN, step is  8000
+Training transmitter, step is  0
+Training transmitter, step is  500
+Training transmitter, step is  1000
+Training transmitter, step is  1500
+Training transmitter, step is  2000
+Training transmitter, step is  2500
+Training transmitter, step is  3000
+Training transmitter, step is  3500
+Training transmitter, step is  4000
+Training transmitter, step is  4500
+Training transmitter, step is  5000
+Training transmitter, step is  5500
+Training transmitter, step is  6000
+Training transmitter, step is  6500
+Training transmitter, step is  7000
+Training receiver, step is  0
+Training receiver, step is  500
+Training receiver, step is  1000
+Training receiver, step is  1500
+Training receiver, step is  2000
+Training receiver, step is  2500
+Training receiver, step is  3000
+Training receiver, step is  3500
+Training receiver, step is  4000
+Training receiver, step is  4500
+Training receiver, step is  5000
+Training receiver, step is  5500
+Training receiver, step is  6000
+Training receiver, step is  6500
+Training receiver, step is  7000
+Training receiver, step is  7500
+Training receiver, step is  8000
+Real Channel Evaluation: Step 8499, Minibatch Loss= 0.0086, Training Accuracy= 0.002
+Generated Channel Evaluation: Step 8499, Minibatch Loss= 0.0055, Training Accuracy= 0.003
+SNR: 10 BER: 0.044491998851299286 WER: 0.07301598787307739
+SNR: 11 BER: 0.03643700107932091 WER: 0.05987602472305298
+SNR: 12 BER: 0.02944999933242798 WER: 0.048480987548828125
+SNR: 13 BER: 0.02373100072145462 WER: 0.03911101818084717
+SNR: 14 BER: 0.01926250010728836 WER: 0.03176599740982056
+SNR: 15 BER: 0.01533500012010336 WER: 0.02538597583770752
+SNR: 16 BER: 0.012231499888002872 WER: 0.02017301321029663
+SNR: 17 BER: 0.009820999577641487 WER: 0.016314029693603516
+SNR: 18 BER: 0.007865999825298786 WER: 0.013020992279052734
+SNR: 19 BER: 0.0062489998526871204 WER: 0.010433018207550049
+[0.044492  0.036437  0.02945   0.023731  0.0192625 0.015335  0.0122315
+ 0.009821  0.007866  0.006249 ]
+[0.07301599 0.05987602 0.04848099 0.03911102 0.031766   0.02538598
+ 0.02017301 0.01631403 0.01302099 0.01043302]
+iteration is  8
+Training ChannelGAN, step is  0
+Training ChannelGAN, step is  500
+Training ChannelGAN, step is  1000
+Training ChannelGAN, step is  1500
+Training ChannelGAN, step is  2000
+Training ChannelGAN, step is  2500
+Training ChannelGAN, step is  3000
+Training ChannelGAN, step is  3500
+Training ChannelGAN, step is  4000
+Training ChannelGAN, step is  4500
+Training ChannelGAN, step is  5000
+Training ChannelGAN, step is  5500
+Training ChannelGAN, step is  6000
+Training ChannelGAN, step is  6500
+Training ChannelGAN, step is  7000
+Training ChannelGAN, step is  7500
+Training ChannelGAN, step is  8000
+Training transmitter, step is  0
+Training transmitter, step is  500
+Training transmitter, step is  1000
+Training transmitter, step is  1500
+Training transmitter, step is  2000
+Training transmitter, step is  2500
+Training transmitter, step is  3000
+Training transmitter, step is  3500
+Training transmitter, step is  4000
+Training transmitter, step is  4500
+Training transmitter, step is  5000
+Training transmitter, step is  5500
+Training transmitter, step is  6000
+Training transmitter, step is  6500
+Training transmitter, step is  7000
+Training receiver, step is  0
+Training receiver, step is  500
+Training receiver, step is  1000
+Training receiver, step is  1500
+Training receiver, step is  2000
+Training receiver, step is  2500
+Training receiver, step is  3000
+Training receiver, step is  3500
+Training receiver, step is  4000
+Training receiver, step is  4500
+Training receiver, step is  5000
+Training receiver, step is  5500
+Training receiver, step is  6000
+Training receiver, step is  6500
+Training receiver, step is  7000
+Training receiver, step is  7500
+Training receiver, step is  8000
+Real Channel Evaluation: Step 8499, Minibatch Loss= 0.0068, Training Accuracy= 0.002
+Generated Channel Evaluation: Step 8499, Minibatch Loss= 0.0034, Training Accuracy= 0.000
+SNR: 10 BER: 0.04438300058245659 WER: 0.07442700862884521
+SNR: 11 BER: 0.03630949929356575 WER: 0.06092798709869385
+SNR: 12 BER: 0.029502499848604202 WER: 0.04965198040008545
+SNR: 13 BER: 0.02362699992954731 WER: 0.03984498977661133
+SNR: 14 BER: 0.018967999145388603 WER: 0.032100021839141846
+SNR: 15 BER: 0.015345499850809574 WER: 0.025910019874572754
+SNR: 16 BER: 0.012374999932944775 WER: 0.020923972129821777
+SNR: 17 BER: 0.009712000377476215 WER: 0.01651102304458618
+SNR: 18 BER: 0.007891000248491764 WER: 0.013386011123657227
+SNR: 19 BER: 0.006190500222146511 WER: 0.010518014430999756
+[0.044383  0.0363095 0.0295025 0.023627  0.018968  0.0153455 0.012375
+ 0.009712  0.007891  0.0061905]
+[0.07442701 0.06092799 0.04965198 0.03984499 0.03210002 0.02591002
+ 0.02092397 0.01651102 0.01338601 0.01051801]
+iteration is  9
+Training ChannelGAN, step is  0
+Training ChannelGAN, step is  500
+Training ChannelGAN, step is  1000
+Training ChannelGAN, step is  1500
+Training ChannelGAN, step is  2000
+Training ChannelGAN, step is  2500
+Training ChannelGAN, step is  3000
+Training ChannelGAN, step is  3500
+Training ChannelGAN, step is  4000
+Training ChannelGAN, step is  4500
+Training ChannelGAN, step is  5000
+Training ChannelGAN, step is  5500
+Training ChannelGAN, step is  6000
+Training ChannelGAN, step is  6500
+Training ChannelGAN, step is  7000
+Training ChannelGAN, step is  7500
+Training ChannelGAN, step is  8000
+Training transmitter, step is  0
+Training transmitter, step is  500
+Training transmitter, step is  1000
+Training transmitter, step is  1500
+Training transmitter, step is  2000
+Training transmitter, step is  2500
+Training transmitter, step is  3000
+Training transmitter, step is  3500
+Training transmitter, step is  4000
+Training transmitter, step is  4500
+Training transmitter, step is  5000
+Training transmitter, step is  5500
+Training transmitter, step is  6000
+Training transmitter, step is  6500
+Training transmitter, step is  7000
+Training receiver, step is  0
+Training receiver, step is  500
+Training receiver, step is  1000
+Training receiver, step is  1500
+Training receiver, step is  2000
+Training receiver, step is  2500
+Training receiver, step is  3000
+Training receiver, step is  3500
+Training receiver, step is  4000
+Training receiver, step is  4500
+Training receiver, step is  5000
+Training receiver, step is  5500
+Training receiver, step is  6000
+Training receiver, step is  6500
+Training receiver, step is  7000
+Training receiver, step is  7500
+Training receiver, step is  8000
+Real Channel Evaluation: Step 8499, Minibatch Loss= 0.0096, Training Accuracy= 0.002
+Generated Channel Evaluation: Step 8499, Minibatch Loss= 0.0007, Training Accuracy= 0.000
+SNR: 10 BER: 0.04558200016617775 WER: 0.07685399055480957
+SNR: 11 BER: 0.037020500749349594 WER: 0.06269901990890503
+SNR: 12 BER: 0.030220499262213707 WER: 0.05122697353363037
+SNR: 13 BER: 0.02384199947118759 WER: 0.0405920147895813
+SNR: 14 BER: 0.019385499879717827 WER: 0.032945990562438965
+SNR: 15 BER: 0.01561100035905838 WER: 0.02663499116897583
+SNR: 16 BER: 0.012583999894559383 WER: 0.021557986736297607
+SNR: 17 BER: 0.01001300010830164 WER: 0.017099976539611816
+SNR: 18 BER: 0.007879500277340412 WER: 0.013568997383117676
+SNR: 19 BER: 0.006433499976992607 WER: 0.011085987091064453
+[0.045582  0.0370205 0.0302205 0.023842  0.0193855 0.015611  0.012584
+ 0.010013  0.0078795 0.0064335]
+[0.07685399 0.06269902 0.05122697 0.04059201 0.03294599 0.02663499
+ 0.02155799 0.01709998 0.013569   0.01108599]
+iteration is  10
+Training ChannelGAN, step is  0
+Training ChannelGAN, step is  500
+Training ChannelGAN, step is  1000
+Training ChannelGAN, step is  1500
+Training ChannelGAN, step is  2000
+Training ChannelGAN, step is  2500
+Training ChannelGAN, step is  3000
+Training ChannelGAN, step is  3500
+Training ChannelGAN, step is  4000
+Training ChannelGAN, step is  4500
+Training ChannelGAN, step is  5000
+Training ChannelGAN, step is  5500
+Training ChannelGAN, step is  6000
+Training ChannelGAN, step is  6500
+Training ChannelGAN, step is  7000
+Training ChannelGAN, step is  7500
+Training ChannelGAN, step is  8000
+Training transmitter, step is  0
+Training transmitter, step is  500
+Training transmitter, step is  1000
+Training transmitter, step is  1500
+Training transmitter, step is  2000
+Training transmitter, step is  2500
+Training transmitter, step is  3000
+Training transmitter, step is  3500
+Training transmitter, step is  4000
+Training transmitter, step is  4500
+Training transmitter, step is  5000
+Training transmitter, step is  5500
+Training transmitter, step is  6000
+Training transmitter, step is  6500
+Training transmitter, step is  7000
+Training receiver, step is  0

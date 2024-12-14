@@ -1,19 +1,36 @@
 from __future__ import division
 import numpy as np
 import tensorflow as tf
-# import tensorflow.compat.v1 as tf
-import os
-# tf.disable_v2_behavior()
 
-# os.environ["CUDA_DEVICE_ORDER"] = "1"
-# os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+channel_data_path = 'data_channel_quadriga'
+#
+# cn_real = np.fromfile(f'{channel_data_path}/channel_real_2.bin')
+# cn_imag = np.fromfile(f'{channel_data_path}/channel_imag_2.bin')
+# cn_real_test = np.fromfile(f'{channel_data_path}/channel_real_2_test.bin')
+# cn_imag_test = np.fromfile(f'{channel_data_path}/channel_imag_2_test.bin')
 
+cn_real = np.fromfile(f'{channel_data_path}/channel_real_out.bin') # outdoor
+cn_imag = np.fromfile(f'{channel_data_path}/channel_imag_out.bin') # outdoor
+cn_real_test = np.fromfile(f'{channel_data_path}/channel_real_out_test.bin') # outdoor
+cn_imag_test = np.fromfile(f'{channel_data_path}/channel_imag_out_test.bin') # outdoor
+
+def min_max_scale(data, range=(-1, 1)):
+    min_val = np.min(data)
+    max_val = np.max(data)
+    scaled = (data - min_val) / (max_val - min_val)
+    scaled = scaled * (range[1] - range[0]) + range[0]
+    return scaled, min_val, max_val
+
+cn_real, real_min, real_max = min_max_scale(cn_real)
+cn_imag, imag_min, imag_max = min_max_scale(cn_imag)
+
+cn_real_test, real_min, real_max = min_max_scale(cn_real_test)
+cn_imag_test, imag_min, imag_max = min_max_scale(cn_imag_test)
 
 def generator_conditional(z, conditioning):  # Convolution Generator
     with tf.variable_scope("generator", reuse=tf.AUTO_REUSE):
         z_combine = tf.concat([z, conditioning], -1)
         conv1_g = tf.layers.conv1d(inputs=z_combine, filters=256, kernel_size=5, padding='same')
-        # conv1_g_bn = tf.layers.batch_normalization(conv1_g, training=training)
         conv1_g = tf.nn.leaky_relu(conv1_g)
         conv2_g = tf.layers.conv1d(inputs=conv1_g, filters=128, kernel_size=3, padding='same')
         conv2_g = tf.nn.leaky_relu(conv2_g)
@@ -22,9 +39,8 @@ def generator_conditional(z, conditioning):  # Convolution Generator
         conv4_g = tf.layers.conv1d(inputs=conv3_g, filters=2, kernel_size=3, padding='same')
         return conv4_g
 
-
-def discriminator_condintional(x, conditioning):
-    with tf.variable_scope("discriminator", reuse=tf.AUTO_REUSE):
+def critic_conditional(x, conditioning):  # Changed from discriminator to critic for WGAN
+    with tf.variable_scope("critic", reuse=tf.AUTO_REUSE):
         z_combine = tf.concat([x, conditioning], -1)
         conv1 = tf.layers.conv1d(inputs=z_combine, filters=256, kernel_size=5, padding='same')
         conv1 = tf.nn.relu(conv1)
@@ -35,9 +51,8 @@ def discriminator_condintional(x, conditioning):
         conv3 = tf.nn.relu(conv3)
         conv4 = tf.layers.conv1d(inputs=conv3, filters=16, kernel_size=3, padding='same')
         FC = tf.nn.relu(tf.layers.dense(conv4, 100, activation=None))
-        D_logit = tf.layers.dense(FC, 1, activation=None)
-        D_prob = tf.nn.sigmoid(D_logit)
-        return D_prob, D_logit
+        critic_logit = tf.layers.dense(FC, 1, activation=None)  # Remove sigmoid for WGAN
+        return critic_logit
 
 
 def encoding(x):
@@ -50,7 +65,7 @@ def encoding(x):
         conv3 = tf.nn.relu(conv3)
         conv4 = tf.layers.conv1d(inputs=conv3, filters=2, kernel_size=3, padding='same')
         layer_4_normalized = tf.scalar_mul(tf.sqrt(tf.cast(block_length / 2, tf.float32)),
-                                           tf.nn.l2_normalize(conv4, dim=1))  # normalize the encoding.
+                                           tf.nn.l2_normalize(conv4, dim=1))
         return layer_4_normalized
 
 
@@ -81,7 +96,6 @@ def decoding(x, channel_info):
 
 
 def sample_Z(sample_size):
-    ''' Sampling the generation noise Z from normal distribution '''
     return np.random.normal(size=sample_size)
 
 
@@ -99,31 +113,37 @@ def Rayleigh_noise_layer(input_layer, h_r, h_i, std):
     input_layer_real = input_layer[:, :, 0]
     input_layer_imag = input_layer[:, :, 1]
     input_layer_complex = tf.complex(real=input_layer_real, imag=input_layer_imag)
-    # input_layer_complex = tf.reshape(input_layer_complex, [-1, block_length, 1])
-    # noise = tf.cast(tf.random_normal(shape=tf.shape(input_layer_complex), mean=0.0, stddev=std, dtype=tf.float32),
-    #                 tf.complex64)
+
     noise = tf.complex(
         real=tf.random_normal(shape=tf.shape(input_layer_complex), mean=0.0, stddev=std, dtype=tf.float32),
         imag=tf.random_normal(shape=tf.shape(input_layer_complex), mean=0.0, stddev=std, dtype=tf.float32))
     output_complex = tf.add(tf.multiply(h_complex, input_layer_complex), noise)
     output_complex_reshape = tf.reshape(output_complex, [-1, block_length, 1])
-    print("Shape of the output complex", output_complex, output_complex_reshape)
 
-    # print("shape of the complex matrix", input_layer_complex, output_complex, tf.concat([tf.real(output_complex), tf.imag(output_complex)], -1))
     return tf.concat([tf.real(output_complex_reshape), tf.imag(output_complex_reshape)], -1)
 
 
-def sample_h(sample_size):
-    return np.random.normal(size=sample_size) / np.sqrt(2.)
+def sample_h(sample_size, cn_real, cn_imag):
+    global start_cn_idx
+
+    if start_cn_idx + sample_size >= len(cn_real):
+        start_cn_idx = 0
+
+    h_real = cn_real[start_cn_idx:start_cn_idx + sample_size]
+    h_imag = cn_imag[start_cn_idx:start_cn_idx + sample_size]
+
+    start_cn_idx += sample_size
+
+    return h_real.reshape(-1, 1), h_imag.reshape(-1, 1)
 
 
-""" Start of the Main function """
-
-''' Building the Graph'''
+# Main modifications for WGAN training
 batch_size = 320
-block_length = 64
+block_length = 2
 Z_dim_c = 16
-learning_rate = 1e-4
+learning_rate = 1e-4 #1e-4
+n_critic = 5  # Number of critic updates per generator update
+clip_value = 0.01 #0.01 # For weight clipping
 
 X = tf.placeholder(tf.float32, shape=[None, block_length, 1])
 E = encoding(X)
@@ -144,28 +164,30 @@ G_decodings_logit, G_decodings_prob = decoding(G_sample, Channel_info)
 encodings_uniform_generated = tf.placeholder(tf.float32, shape=[None, block_length, 2])
 Conditions_uniform = tf.concat([encodings_uniform_generated, Channel_info], axis=-1)
 
-print("shapes G and R and channel info", G_sample, R_sample, encodings_uniform_generated)
 G_sample_uniform = generator_conditional(Z, Conditions_uniform)
 R_sample_uniform = Rayleigh_noise_layer(encodings_uniform_generated, h_r, h_i, Noise_std)
-D_prob_real, D_logit_real = discriminator_condintional(R_sample_uniform, Conditions_uniform)
-D_prob_fake, D_logit_fake = discriminator_condintional(G_sample_uniform, Conditions_uniform)
 
-Disc_vars = [v for v in tf.trainable_variables() if v.name.startswith('discriminator')]
+# WGAN critic outputs
+C_real = critic_conditional(R_sample_uniform, Conditions_uniform)
+C_fake = critic_conditional(G_sample_uniform, Conditions_uniform)
+
+# WGAN losses
+C_loss = tf.reduce_mean(C_fake) - tf.reduce_mean(C_real)
+G_loss = -tf.reduce_mean(C_fake)
+
+# Get variables
+Critic_vars = [v for v in tf.trainable_variables() if v.name.startswith('critic')]
 Gen_vars = [v for v in tf.trainable_variables() if v.name.startswith('generator')]
 Tx_vars = [v for v in tf.trainable_variables() if v.name.startswith('encoding')]
 Rx_vars = [v for v in tf.trainable_variables() if v.name.startswith('decoding')]
 
-''' Standard GAN '''
-D_loss_real = tf.reduce_mean(
-    tf.nn.sigmoid_cross_entropy_with_logits(logits=D_logit_real, labels=tf.ones_like(D_logit_real)))
-D_loss_fake = tf.reduce_mean(
-    tf.nn.sigmoid_cross_entropy_with_logits(logits=D_logit_fake, labels=tf.zeros_like(D_logit_fake)))
-D_loss = D_loss_real + D_loss_fake
-G_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=D_logit_fake, labels=tf.ones_like(D_logit_fake)))
-# Set up solvers
+# Clip critic weights
+clip_critic = [p.assign(tf.clip_by_value(p, -clip_value, clip_value)) for p in Critic_vars]
 
-D_solver = tf.train.AdamOptimizer(learning_rate=1e-4, beta1=0.5).minimize(D_loss, var_list=Disc_vars)
-G_solver = tf.train.AdamOptimizer(learning_rate=1e-4, beta1=0.5).minimize(G_loss, var_list=Gen_vars)
+# Optimizers
+C_solver = tf.train.RMSPropOptimizer(learning_rate=learning_rate).minimize(C_loss, var_list=Critic_vars)
+G_solver = tf.train.RMSPropOptimizer(learning_rate=learning_rate).minimize(G_loss, var_list=Gen_vars)
+
 loss_receiver_R = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(
     logits=R_decodings_logit, labels=X))
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
@@ -174,20 +196,21 @@ loss_receiver_G = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(
     logits=G_decodings_logit, labels=X))
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
 Tx_solver = optimizer.minimize(loss_receiver_G, var_list=Tx_vars)
+
 accuracy_R = tf.reduce_mean(tf.cast((tf.abs(R_decodings_prob - X) > 0.5), tf.float32))
 accuracy_G = tf.reduce_mean(tf.cast((tf.abs(G_decodings_prob - X) > 0.5), tf.float32))
 WER_R = 1 - tf.reduce_mean(tf.cast(tf.reduce_all(tf.abs(R_decodings_prob - X) < 0.5, 1), tf.float32))
 
 init = tf.global_variables_initializer()
-number_steps_receiver = 7500  # 8500
-number_steps_channel = 8500  # 8500
-number_steps_transmitter = 7500  # 8500
-number_iterations = 15  # in each iteration, the receiver, the transmitter and the channel will be updated
+number_steps_receiver = 6000 # 8500
+number_steps_channel = 6500 # 8500
+number_steps_transmitter = 6000  # 8500
+number_iterations = 10  # in each iteration, the receiver, the transmitter and the channel will be updated
 
 EbNo_train = 20.
 EbNo_train = 10. ** (EbNo_train / 10.)
 
-EbNo_train_GAN = 35.
+EbNo_train_GAN = 40.
 EbNo_train_GAN = 10. ** (EbNo_train_GAN / 10.)
 
 EbNo_test = 15.
@@ -210,52 +233,77 @@ N_training = int(1e6)
 data = np.random.binomial(1, 0.5, [N_training, block_length, 1])
 N_val = int(1e4)
 val_data = np.random.binomial(1, 0.5, [N_val, block_length, 1])
-N_test = int(1e5)
+N_test = int(1e4)
 test_data = np.random.binomial(1, 0.5, [N_test, block_length, 1])
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
+
+# start_idx = 0
+# h_r, h_i = sample_h(batch_size, cn_real, cn_imag)
+
 with tf.Session(config=config) as sess:
     sess.run(tf.global_variables_initializer())
     start_idx = 0
+    start_cn_idx = 0
+
     for iteration in range(number_iterations):
-        # number_steps_transmitter += 500 #2000  # 5000
-        # number_steps_receiver += 500 #2000  # 5000
-        # number_steps_channel += 500 #1000  # 2000
         print("iteration is ", iteration)
-        ''' =========== Training the Channel Simulator ======== '''
+        number_steps_receiver += 1000  # 8500
+        number_steps_channel += 1000  # 8500
+        number_steps_transmitter += 1000  # 8500
+
+        # Training the Channel Simulator (WGAN)
         for step in range(number_steps_channel):
+            for _ in range(n_critic):  # Train critic more times than generator
+                batch_x = generate_batch_data(int(batch_size / 2))
+                encoded_data = sess.run([E], feed_dict={X: batch_x})
+                random_data = sample_uniformly([int(batch_size / 2), block_length, 2])
+                input_data = np.concatenate((
+                    np.asarray(encoded_data).reshape([int(batch_size / 2), block_length, 2])
+                    + np.random.normal(0, 0.1, size=([int(batch_size / 2), block_length, 2])),
+                    random_data), axis=0)
+
+                h_real, h_image = sample_h(batch_size, cn_real, cn_imag)
+
+                # Train critic
+                _, c_loss_curr, _ = sess.run(
+                    [C_solver, C_loss, clip_critic],
+                    feed_dict={
+                        encodings_uniform_generated: input_data,
+                        h_i: h_image,
+                        h_r: h_real,
+                        Z: sample_Z([batch_size, block_length, Z_dim_c]),
+                        Noise_std: (np.sqrt(1 / (2 * R * EbNo_train_GAN)))
+                    }
+                )
+                sess.run(clip_critic)
+
+            # Train generator
+            _, g_loss_curr = sess.run(
+                [G_solver, G_loss],
+                feed_dict={
+                    encodings_uniform_generated: input_data,
+                    h_i: h_image,
+                    h_r: h_real,
+                    Z: sample_Z([batch_size, block_length, Z_dim_c]),
+                    Noise_std: (np.sqrt(1 / (2 * R * EbNo_train_GAN)))
+                }
+            )
+
             if step % 500 == 0:
-                print("Training ChannelGAN, step is ", step)
-            batch_x = generate_batch_data(int(batch_size / 2))
-            encoded_data = sess.run([E], feed_dict={X: batch_x})
-            random_data = sample_uniformly([int(batch_size / 2), block_length, 2])
-
-            input_data = np.concatenate((np.asarray(encoded_data).reshape([int(batch_size / 2), block_length, 2])
-                                         + np.random.normal(0, 0.1, size=([int(batch_size / 2), block_length, 2])),
-                                         random_data), axis=0)
-
-            _, D_loss_curr = sess.run([D_solver, D_loss],
-                                      feed_dict={encodings_uniform_generated: input_data,
-                                                 h_i: sample_h([batch_size, 1]),
-                                                 h_r: sample_h([batch_size, 1]),
-                                                 Z: sample_Z([batch_size, block_length, Z_dim_c]),
-                                                 Noise_std: (np.sqrt(1 / (2 * R * EbNo_train_GAN)))})
-            _, G_loss_curr = sess.run([G_solver, G_loss],
-                                      feed_dict={encodings_uniform_generated: input_data,
-                                                 h_i: sample_h([batch_size, 1]),
-                                                 h_r: sample_h([batch_size, 1]),
-                                                 Z: sample_Z([batch_size, block_length, Z_dim_c]),
-                                                 Noise_std: (np.sqrt(1 / (2 * R * EbNo_train_GAN)))})
+                print(f"Step {step}, Critic Loss: {c_loss_curr}, Generator Loss: {g_loss_curr}")
 
         ''' =========== Training the Transmitter ==== '''
         for step in range(number_steps_transmitter):
             if step % 500 == 0:
                 print("Training transmitter, step is ", step)
             batch_x = generate_batch_data(batch_size)
+            h_real, h_image = sample_h(batch_size, cn_real, cn_imag)
+
             sess.run(Tx_solver, feed_dict={X: batch_x,
                                            Z: sample_Z([batch_size, block_length, Z_dim_c]),
-                                           h_i: sample_h([batch_size, 1]),
-                                           h_r: sample_h([batch_size, 1]),
+                                           h_i: h_image,
+                                           h_r: h_real,
                                            Noise_std: (np.sqrt(1 / (2 * R * EbNo_train)))
                                            })
 
@@ -264,16 +312,18 @@ with tf.Session(config=config) as sess:
             if step % 500 == 0:
                 print("Training receiver, step is ", step)
             batch_x = generate_batch_data(batch_size)
+            h_real, h_image = sample_h(batch_size, cn_real, cn_imag)
+
             sess.run(Rx_solver, feed_dict={X: batch_x,
-                                           h_i: sample_h([batch_size, 1]),
-                                           h_r: sample_h([batch_size, 1]),
+                                           h_i: h_image,
+                                           h_r: h_real,
                                            Noise_std: (np.sqrt(1 / (2 * R * EbNo_train)))})
 
         '''  ----- Testing ----  '''
         loss, acc = sess.run([loss_receiver_R, accuracy_R],
                              feed_dict={X: batch_x,
-                                        h_i: sample_h([batch_size, 1]),
-                                        h_r: sample_h([batch_size, 1]),
+                                        h_i: h_image,
+                                        h_r: h_real,
                                         Noise_std: np.sqrt(1 / (2 * R * EbNo_train))})
         print("Real Channel Evaluation:", "Step " + str(step) + ", Minibatch Loss= " + \
               "{:.4f}".format(loss) + ", Training Accuracy= " + \
@@ -281,8 +331,8 @@ with tf.Session(config=config) as sess:
 
         loss, acc = sess.run([loss_receiver_G, accuracy_G],
                              feed_dict={X: batch_x,
-                                        h_i: sample_h([batch_size, 1]),
-                                        h_r: sample_h([batch_size, 1]),
+                                        h_i: h_image,
+                                        h_r: h_real,
                                         Z: sample_Z([batch_size, block_length, Z_dim_c]),
                                         Noise_std: np.sqrt(1 / (2 * R * EbNo_train))
                                         })
@@ -299,10 +349,11 @@ with tf.Session(config=config) as sess:
             ber[n], wer[n] = sess.run([accuracy_R, WER_R],
                                       feed_dict={X: test_data,
                                                  Noise_std: (np.sqrt(1 / (2 * R * EbNo))),
-                                                 h_i: sample_h([len(test_data), 1]),
-                                                 h_r: sample_h([len(test_data), 1]),
+                                                 h_i: cn_imag_test.reshape(-1, 1),
+                                                 h_r: cn_real_test.reshape(-1, 1)
                                                  })
             print('SNR:', EbNodB_range[n], 'BER:', ber[n], 'WER:', wer[n])
 
         print(ber)
         print(wer)
+
