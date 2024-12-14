@@ -1,9 +1,13 @@
 from __future__ import division
 import numpy as np
 import tensorflow as tf
-''' This file aims to solve the end to end communication problem in Rayleigh fading channel '''
-''' The condition of channel GAN is the encoding and information h '''
-''' We should compare with baseline that equalizor of Rayleigh fading'''
+# import tensorflow.compat.v1 as tf
+import os
+# tf.disable_v2_behavior()
+
+# os.environ["CUDA_DEVICE_ORDER"] = "1"
+# os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+
 
 def generator_conditional(z, conditioning):  # Convolution Generator
     with tf.variable_scope("generator", reuse=tf.AUTO_REUSE):
@@ -45,7 +49,7 @@ def encoding(x):
         conv3 = tf.layers.conv1d(inputs=conv2, filters=64, kernel_size=3, padding='same')
         conv3 = tf.nn.relu(conv3)
         conv4 = tf.layers.conv1d(inputs=conv3, filters=2, kernel_size=3, padding='same')
-        layer_4_normalized = tf.scalar_mul(tf.sqrt(tf.cast(block_length/2, tf.float32)),
+        layer_4_normalized = tf.scalar_mul(tf.sqrt(tf.cast(block_length / 2, tf.float32)),
                                            tf.nn.l2_normalize(conv4, dim=1))  # normalize the encoding.
         return layer_4_normalized
 
@@ -96,8 +100,8 @@ def Rayleigh_noise_layer(input_layer, h_r, h_i, std):
     input_layer_imag = input_layer[:, :, 1]
     input_layer_complex = tf.complex(real=input_layer_real, imag=input_layer_imag)
     # input_layer_complex = tf.reshape(input_layer_complex, [-1, block_length, 1])
-    noise = tf.cast(tf.random_normal(shape=tf.shape(input_layer_complex), mean=0.0, stddev=std, dtype=tf.float32),
-                    tf.complex64)
+    # noise = tf.cast(tf.random_normal(shape=tf.shape(input_layer_complex), mean=0.0, stddev=std, dtype=tf.float32),
+    #                 tf.complex64)
     noise = tf.complex(
         real=tf.random_normal(shape=tf.shape(input_layer_complex), mean=0.0, stddev=std, dtype=tf.float32),
         imag=tf.random_normal(shape=tf.shape(input_layer_complex), mean=0.0, stddev=std, dtype=tf.float32))
@@ -116,8 +120,8 @@ def sample_h(sample_size):
 """ Start of the Main function """
 
 ''' Building the Graph'''
-batch_size = 512
-block_length = 128
+batch_size = 320
+block_length = 64
 Z_dim_c = 16
 learning_rate = 1e-4
 
@@ -127,8 +131,7 @@ Z = tf.placeholder(tf.float32, shape=[None, block_length, Z_dim_c])
 Noise_std = tf.placeholder(tf.float32, shape=[])
 h_r = tf.placeholder(tf.float32, shape=[None, 1])
 h_i = tf.placeholder(tf.float32, shape=[None, 1])
-#h_r_noise = tf.add(h_r, tf.random_normal(shape=tf.shape(h_r), mean=0.0, stddev=Noise_std, dtype=tf.float32))
-#h_i_noise = tf.add(h_i, tf.random_normal(shape=tf.shape(h_i), mean=0.0, stddev=Noise_std, dtype=tf.float32))
+
 Channel_info = tf.tile(tf.concat([tf.reshape(h_r, [-1, 1, 1]), tf.reshape(h_i, [-1, 1, 1])], -1), [1, block_length, 1])
 Conditions = tf.concat([E, Channel_info], axis=-1)
 
@@ -153,7 +156,6 @@ Tx_vars = [v for v in tf.trainable_variables() if v.name.startswith('encoding')]
 Rx_vars = [v for v in tf.trainable_variables() if v.name.startswith('decoding')]
 
 ''' Standard GAN '''
-
 D_loss_real = tf.reduce_mean(
     tf.nn.sigmoid_cross_entropy_with_logits(logits=D_logit_real, labels=tf.ones_like(D_logit_real)))
 D_loss_fake = tf.reduce_mean(
@@ -174,14 +176,13 @@ optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
 Tx_solver = optimizer.minimize(loss_receiver_G, var_list=Tx_vars)
 accuracy_R = tf.reduce_mean(tf.cast((tf.abs(R_decodings_prob - X) > 0.5), tf.float32))
 accuracy_G = tf.reduce_mean(tf.cast((tf.abs(G_decodings_prob - X) > 0.5), tf.float32))
-WER_R = 1 - tf.reduce_mean(tf.cast(tf.reduce_all(tf.abs(R_decodings_prob-X)<0.5, 1),tf.float32))
+WER_R = 1 - tf.reduce_mean(tf.cast(tf.reduce_all(tf.abs(R_decodings_prob - X) < 0.5, 1), tf.float32))
+
 init = tf.global_variables_initializer()
-number_steps_receiver = 5000
-number_steps_channel = 5000
-number_steps_transmitter = 5000
-display_step = 100
-batch_size = 320
-number_iterations = 1000  # in each iteration, the receiver, the transmitter and the channel will be updated
+number_steps_receiver = 7500  # 8500
+number_steps_channel = 8500  # 8500
+number_steps_transmitter = 7500  # 8500
+number_iterations = 15  # in each iteration, the receiver, the transmitter and the channel will be updated
 
 EbNo_train = 20.
 EbNo_train = 10. ** (EbNo_train / 10.)
@@ -194,6 +195,7 @@ EbNo_test = 10. ** (EbNo_test / 10.)
 
 R = 0.5
 
+
 def generate_batch_data(batch_size):
     global start_idx, data
     if start_idx + batch_size >= N_training:
@@ -201,14 +203,14 @@ def generate_batch_data(batch_size):
         data = np.random.binomial(1, 0.5, [N_training, block_length, 1])
     batch_x = data[start_idx:start_idx + batch_size]
     start_idx += batch_size
-    #print("start_idx", start_idx)
+    # print("start_idx", start_idx)
     return batch_x
 
 N_training = int(1e6)
 data = np.random.binomial(1, 0.5, [N_training, block_length, 1])
 N_val = int(1e4)
 val_data = np.random.binomial(1, 0.5, [N_val, block_length, 1])
-N_test = int(1e4)
+N_test = int(1e5)
 test_data = np.random.binomial(1, 0.5, [N_test, block_length, 1])
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
@@ -216,13 +218,13 @@ with tf.Session(config=config) as sess:
     sess.run(tf.global_variables_initializer())
     start_idx = 0
     for iteration in range(number_iterations):
-        number_steps_transmitter += 5000
-        number_steps_receiver += 5000
-        number_steps_channel += 2000
+        # number_steps_transmitter += 500 #2000  # 5000
+        # number_steps_receiver += 500 #2000  # 5000
+        # number_steps_channel += 500 #1000  # 2000
         print("iteration is ", iteration)
         ''' =========== Training the Channel Simulator ======== '''
         for step in range(number_steps_channel):
-            if step % 100 == 0:
+            if step % 500 == 0:
                 print("Training ChannelGAN, step is ", step)
             batch_x = generate_batch_data(int(batch_size / 2))
             encoded_data = sess.run([E], feed_dict={X: batch_x})
@@ -247,10 +249,11 @@ with tf.Session(config=config) as sess:
 
         ''' =========== Training the Transmitter ==== '''
         for step in range(number_steps_transmitter):
-            if step % 100 == 0:
+            if step % 500 == 0:
                 print("Training transmitter, step is ", step)
             batch_x = generate_batch_data(batch_size)
-            sess.run(Tx_solver, feed_dict={X: batch_x, Z: sample_Z([batch_size, block_length, Z_dim_c]),
+            sess.run(Tx_solver, feed_dict={X: batch_x,
+                                           Z: sample_Z([batch_size, block_length, Z_dim_c]),
                                            h_i: sample_h([batch_size, 1]),
                                            h_r: sample_h([batch_size, 1]),
                                            Noise_std: (np.sqrt(1 / (2 * R * EbNo_train)))
@@ -258,7 +261,7 @@ with tf.Session(config=config) as sess:
 
         ''' ========== Training the Receiver ============== '''
         for step in range(number_steps_receiver):
-            if step % 100 == 0:
+            if step % 500 == 0:
                 print("Training receiver, step is ", step)
             batch_x = generate_batch_data(batch_size)
             sess.run(Rx_solver, feed_dict={X: batch_x,
@@ -286,18 +289,20 @@ with tf.Session(config=config) as sess:
         print("Generated Channel Evaluation:", "Step " + str(step) + ", Minibatch Loss= " + \
               "{:.4f}".format(loss) + ", Training Accuracy= " + \
               "{:.3f}".format(acc))
-        EbNodB_range = np.arange(0, 30)
+
+        EbNodB_range = np.arange(0, 21)
         ber = np.ones(len(EbNodB_range))
         wer = np.ones(len(EbNodB_range))
+
         for n in range(0, len(EbNodB_range)):
             EbNo = 10.0 ** (EbNodB_range[n] / 10.0)
             ber[n], wer[n] = sess.run([accuracy_R, WER_R],
-                              feed_dict={X: test_data, Noise_std: (np.sqrt(1 / (2 * R * EbNo))),
-                                         h_i: sample_h([len(test_data), 1]),
-                                         h_r: sample_h([len(test_data), 1]),
-                                         })
+                                      feed_dict={X: test_data,
+                                                 Noise_std: (np.sqrt(1 / (2 * R * EbNo))),
+                                                 h_i: sample_h([len(test_data), 1]),
+                                                 h_r: sample_h([len(test_data), 1]),
+                                                 })
             print('SNR:', EbNodB_range[n], 'BER:', ber[n], 'WER:', wer[n])
 
         print(ber)
         print(wer)
-
